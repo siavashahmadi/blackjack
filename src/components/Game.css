@@ -1,0 +1,641 @@
+.game-container {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 2rem;
+  text-align: center;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+  perspective: 1200px;
+}
+
+.game-table {
+  background: #2c7a4c;
+  border-radius: 200px 200px 0 0;
+  padding: 3rem;
+  margin-bottom: 2rem;
+  box-shadow: 
+    0 4px 6px rgba(0, 0, 0, 0.1),
+    inset 0 0 50px rgba(0, 0, 0, 0.3),
+    0 0 0 15px #1a472e;
+  position: relative;
+  transform: rotateX(15deg);
+  min-height: 700px;
+  width: 1200px;
+  margin: 0 auto;
+}
+
+.table-felt {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  border-radius: 200px 200px 0 0;
+  background: 
+    radial-gradient(circle at center, transparent 0%, rgba(0,0,0,0.2) 100%),
+    linear-gradient(45deg, transparent 48%, rgba(255,255,255,0.1) 50%, transparent 52%),
+    linear-gradient(-45deg, transparent 48%, rgba(255,255,255,0.1) 50%, transparent 52%);
+  background-size: 100% 100%, 30px 30px, 30px 30px;
+  pointer-events: none;
+}
+
+.dealer-section {
+  position: absolute;
+  top: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 100%;
+}
+
+.player-section {
+  position: absolute;
+  bottom: 200px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 100%;
+}
+
+.player-info {
+  position: absolute;
+  bottom: -10%;
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgba(0, 0, 0, 0.85);
+  padding: 0.8rem 2rem;
+  border-radius: 25px;
+  color: white;
+  font-size: 1.2rem;
+  white-space: nowrap;
+  z-index: 10;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+  backdrop-filter: blur(5px);
+  border: 1px solid rgba(255,255,255,0.1);
+  letter-spacing: 0.5px;
+}
+
+h1 {
+  color: #2c3e50;
+  margin-bottom: 2rem;
+  font-size: 2.5rem;
+  text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+}
+
+h2 {
+  color: #fff;
+  margin-bottom: 1rem;
+  font-size: 1.5rem;
+  text-shadow: 1px 1px 2px rgba(0,0,0,0.5);
+}
+
+.cards {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.card {
+  background: #fff;
+  border-radius: 8px;
+  padding: 1.5rem 1rem;
+  min-width: 60px;
+  font-size: 1.25rem;
+  font-weight: bold;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  transition: transform 0.2s ease;
+  border: 1px solid rgba(0,0,0,0.1);
+}
+
+.card:hover {
+  transform: translateY(-2px) rotate(2deg);
+}
+
+.betting-area {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 300px;
+  height: 100px;
+  border: 2px dashed rgba(255,255,255,0.3);
+  border-radius: 50px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: rgba(0, 0, 0, 0.2);
+}
+
+.stacked-bet {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.stacked-bet .placed-chip {
+  position: relative;
+  margin-top: -40px;
+  transform: none !important;
+  animation: none;
+}
+
+.stacked-bet .placed-chip:first-child {
+  margin-top: 0;
+}
+
+.placed-chips {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+}
+
+.placed-chip {
+  position: absolute;
+  width: 45px;
+  height: 45px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  color: white;
+  font-size: 0.9rem;
+  box-shadow: 
+    0 2px 4px rgba(0,0,0,0.2),
+    inset 0 -2px 4px rgba(0,0,0,0.3);
+  border: 2px solid rgba(255,255,255,0.5);
+  transform: rotate(var(--rotation));
+  animation: dropChip 0.3s ease-out;
+}
+
+@keyframes dropChip {
+  0% {
+    transform: translateY(-100px) rotate(var(--rotation));
+    opacity: 0;
+  }
+  100% {
+    transform: translateY(0) rotate(var(--rotation));
+    opacity: 1;
+  }
+}
+
+.controls-container {
+  position: fixed;
+  bottom: 10px;
+  left: 0;
+  right: 0;
+  padding: 1rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+}
+
+.controls-container > * {
+  pointer-events: auto;
+}
+
+.controls {
+  width: auto;
+  min-width: 300px;
+  padding: 1rem;
+  border-radius: 15px;
+  /* background: rgba(0, 0, 0, 0.85); */
+  /* backdrop-filter: blur(5px); */
+}
+
+.chip-stack {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+  padding: 1rem;
+  border-radius: 25px;
+  /* background: rgba(0, 0, 0, 0.85); */
+  /* backdrop-filter: blur(5px); */
+}
+
+.chip-button {
+  width: 65px;
+  height: 65px;
+  border-radius: 50%;
+  font-weight: bold;
+  padding: 0;
+  margin: 0;
+  border: 4px solid rgba(255, 255, 255, 0.5);
+  box-shadow: 
+    0 4px 6px rgba(0, 0, 0, 0.2),
+    inset 0 -4px 8px rgba(0,0,0,0.3);
+  transition: all 0.2s ease;
+  color: white;
+  cursor: pointer;
+  position: relative;
+  font-size: 1.1rem;
+}
+
+.chip-button::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 80%;
+  height: 80%;
+  border-radius: 50%;
+  border: 2px dashed rgba(255,255,255,0.3);
+}
+
+.chip-button:nth-child(1) { background: #e74c3c; }
+.chip-button:nth-child(2) { background: #3498db; }
+.chip-button:nth-child(3) { background: #2ecc71; }
+.chip-button:nth-child(4) { background: #f1c40f; }
+
+.chip-button:hover {
+  transform: translateY(-3px) scale(1.05);
+}
+
+.chip-button:disabled {
+  opacity: 0.5;
+  transform: none;
+}
+
+.action-controls {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+  background: rgba(0,0,0,0.8);
+  padding: 1rem;
+  border-radius: 10px;
+}
+
+button {
+  background: #3498db;
+  color: white;
+  border: none;
+  padding: 0.8rem 1.5rem;
+  border-radius: 6px;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  font-weight: bold;
+}
+
+button:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+}
+
+button:disabled {
+  background: #bdc3c7;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.message {
+  position: fixed;
+  top: 100px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 1.25rem;
+  color: white;
+  background: rgba(0, 0, 0, 0.55);
+  padding: 1rem 2rem;
+  border-radius: 15px;
+  z-index: 100;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+  backdrop-filter: blur(5px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  max-width: 90vw;
+  text-align: center;
+  animation: slideDown 0.3s ease-out;
+}
+
+@keyframes slideDown {
+  from {
+    transform: translate(-50%, -100%);
+    opacity: 0;
+  }
+  to {
+    transform: translate(-50%, 0);
+    opacity: 1;
+  }
+}
+
+.result {
+  font-size: 1.5rem;
+  font-weight: bold;
+  margin-bottom: 1.5rem;
+  color: white;
+  animation: fadeIn 0.5s ease;
+  text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+  letter-spacing: 1px;
+  line-height: 1.4;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.current-bet {
+  position: absolute;
+  top: -30px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 1.25rem;
+  color: white;
+  text-shadow: 1px 1px 2px rgba(0,0,0,0.5);
+}
+
+/* Special button styles */
+button[onClick*="surrender"] {
+  background: #e74c3c;
+}
+
+button[onClick*="surrender"]:hover {
+  background: #c0392b;
+}
+
+button[onClick*="doubleDown"] {
+  background: #27ae60;
+}
+
+button[onClick*="doubleDown"]:hover {
+  background: #219a52;
+}
+
+button[onClick*="split"] {
+  background: #9b59b6;
+}
+
+button[onClick*="split"]:hover {
+  background: #8e44ad;
+}
+
+.bet-actions {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+  margin-top: 0;
+}
+
+/* Mobile Responsiveness */
+@media (max-width: 1400px) {
+  .game-table {
+    width: 95vw;
+    min-height: 600px;
+    transform: rotateX(10deg);
+  }
+}
+
+@media (max-width: 768px) {
+  .game-container {
+    padding: 1rem;
+    height: 100vh;
+    perspective: none;
+  }
+
+  .game-table {
+    transform: none;
+    min-height: calc(100vh - 200px);
+    padding: 1.5rem;
+    border-radius: 30px 30px 0 0;
+    margin: 0;
+    width: 100%;
+  }
+
+  .table-felt {
+    border-radius: 30px 30px 0 0;
+  }
+
+  .dealer-section {
+    top: 20px;
+  }
+
+  .player-section {
+    bottom: 160px;
+  }
+
+  .betting-area {
+    width: 90%;
+    max-width: 300px;
+    height: 80px;
+  }
+
+  .chip-stack {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0.8rem;
+    width: 100%;
+    max-width: 300px;
+    padding: 0.8rem;
+  }
+
+  .chip-button {
+    width: 100%;
+    aspect-ratio: 1;
+    font-size: 1rem;
+  }
+
+  .controls {
+    width: 100%;
+    min-width: auto;
+  }
+
+  .action-controls {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0.8rem;
+  }
+
+  button {
+    width: 100%;
+    padding: 0.8rem;
+    font-size: 0.9rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .game-table {
+    min-height: calc(100vh - 180px);
+    border-radius: 20px 20px 0 0;
+    padding: 1rem;
+  }
+
+  .table-felt {
+    border-radius: 20px 20px 0 0;
+  }
+
+  .chip-button {
+    font-size: 0.9rem;
+  }
+
+  .controls {
+    padding: 0.8rem;
+  }
+
+  button {
+    padding: 0.7rem;
+    font-size: 0.8rem;
+  }
+
+  .message {
+    font-size: 1rem;
+    padding: 0.8rem 1rem;
+  }
+}
+
+/* iPhone SE and other small devices */
+@media (max-width: 380px) {
+  .game-table {
+    min-height: calc(100vh - 150px);
+  }
+
+  .card {
+    padding: 0.6rem 0.4rem;
+    min-width: 35px;
+    font-size: 0.8rem;
+  }
+
+  .chip-button {
+    width: 45px;
+    height: 45px;
+    font-size: 0.9rem;
+  }
+
+  .player-info {
+    font-size: 0.9rem;
+    padding: 0.6rem 1rem;
+  }
+}
+
+/* Landscape mode */
+@media (max-height: 600px) and (orientation: landscape) {
+  .game-container {
+    height: auto;
+    min-height: 100vh;
+  }
+
+  .game-table {
+    min-height: 450px;
+  }
+
+  .dealer-section {
+    top: 5px;
+  }
+
+  .player-section {
+    bottom: 140px;
+  }
+
+  .chip-stack {
+    position: fixed;
+    bottom: 70px;
+    padding: 0.5rem;
+  }
+
+  .controls {
+    padding: 0.5rem;
+  }
+
+  .player-info {
+    bottom: 120px;
+  }
+
+  .card {
+    padding: 0.6rem 0.4rem;
+    min-width: 35px;
+  }
+}
+
+/* Safe area for notched phones */
+@supports (padding: max(0px)) {
+  .controls {
+    padding-bottom: max(1rem, env(safe-area-inset-bottom));
+  }
+
+  .chip-stack {
+    bottom: calc(85px + env(safe-area-inset-bottom));
+  }
+}
+
+/* Touch device optimizations */
+@media (hover: none) {
+  .card:hover {
+    transform: none;
+  }
+
+  .chip-button:hover {
+    transform: none;
+  }
+
+  button:hover {
+    transform: none;
+    box-shadow: none;
+  }
+
+  button:active {
+    transform: scale(0.95);
+  }
+}
+
+/* Loading state for buttons */
+button:active {
+  transform: scale(0.95);
+  transition: transform 0.1s;
+}
+
+/* Prevent text selection */
+.card, .chip-button, button, .message, .player-info {
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  user-select: none;
+}
+
+/* Dark mode support */
+@media (prefers-color-scheme: dark) {
+  .message,
+  .player-info,
+  .controls,
+  .chip-stack {
+    background: rgba(0,0,0,0.9);
+  }
+}
+
+/* High contrast support */
+@media (prefers-contrast: high) {
+  .message,
+  .player-info,
+  .controls,
+  .chip-stack {
+    background: #000000;
+    border: 2px solid #ffffff;
+  }
+
+  button {
+    border: 2px solid #ffffff;
+  }
+}
+
+/* Reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+  .card:hover {
+    transform: none;
+  }
+
+  .chip-button:hover {
+    transform: none;
+  }
+
+  .placed-chip {
+    animation: none;
+  }
+
+  .message {
+    animation: none;
+  }
+} 

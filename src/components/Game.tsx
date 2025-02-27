@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { GameState, Card as CardType, Player } from '../types/game';
+import { GameState, Player } from '../types/game';
 import {
   createDeck,
   createPlayer,
@@ -35,7 +35,6 @@ export default function Game() {
   const [currentBetAmount, setCurrentBetAmount] = useState(0);
   const [placedChips, setPlacedChips] = useState<PlacedChip[]>([]);
   const [showDealerCard, setShowDealerCard] = useState(false);
-  const [isDealing, setIsDealing] = useState(false);
   const [isAnimating, setIsAnimating] = useState(false);
   
   // State for animation and message components
@@ -133,12 +132,12 @@ export default function Game() {
       bet: currentBetAmount,
     };
     
-    setIsDealing(true);
+    setIsAnimating(true);
     
     // Start dealing animation
     setTimeout(() => {
       startNewGame(player);
-      setIsDealing(false);
+      setIsAnimating(false);
     }, 500);
   };
 

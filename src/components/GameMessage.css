@@ -1,0 +1,139 @@
+.game-message {
+    position: fixed;
+    top: 100px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 1000;
+    display: flex;
+    align-items: center;
+    padding: 1rem 1.5rem;
+    border-radius: 12px;
+    background: rgba(0, 0, 0, 0.8);
+    color: white;
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    max-width: 90vw;
+    opacity: 0;
+    pointer-events: none;
+  }
+  
+  .message-icon {
+    font-size: 1.5rem;
+    margin-right: 1rem;
+  }
+  
+  .message-text {
+    font-size: 1.2rem;
+    font-weight: 500;
+  }
+  
+  /* Message types */
+  .game-message.info {
+    background: linear-gradient(135deg, rgba(52, 152, 219, 0.9), rgba(41, 128, 185, 0.9));
+  }
+  
+  .game-message.success {
+    background: linear-gradient(135deg, rgba(46, 204, 113, 0.9), rgba(39, 174, 96, 0.9));
+  }
+  
+  .game-message.warning {
+    background: linear-gradient(135deg, rgba(241, 196, 15, 0.9), rgba(243, 156, 18, 0.9));
+  }
+  
+  .game-message.error {
+    background: linear-gradient(135deg, rgba(231, 76, 60, 0.9), rgba(192, 57, 43, 0.9));
+  }
+  
+  /* Animations */
+  .message-enter {
+    animation: messageEnter 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+  }
+  
+  .message-exit {
+    animation: messageExit 0.3s ease-in forwards;
+  }
+  
+  @keyframes messageEnter {
+    0% {
+      transform: translate(-50%, -20px);
+      opacity: 0;
+    }
+    100% {
+      transform: translate(-50%, 0);
+      opacity: 1;
+    }
+  }
+  
+  @keyframes messageExit {
+    0% {
+      transform: translate(-50%, 0);
+      opacity: 1;
+    }
+    100% {
+      transform: translate(-50%, -20px);
+      opacity: 0;
+    }
+  }
+  
+  /* Mobile Responsiveness */
+  @media (max-width: 768px) {
+    .game-message {
+      top: 80px;
+      padding: 0.8rem 1.2rem;
+    }
+    
+    .message-icon {
+      font-size: 1.3rem;
+      margin-right: 0.8rem;
+    }
+    
+    .message-text {
+      font-size: 1rem;
+    }
+  }
+  
+  @media (max-width: 480px) {
+    .game-message {
+      top: 60px;
+      padding: 0.7rem 1rem;
+    }
+    
+    .message-icon {
+      font-size: 1.2rem;
+      margin-right: 0.6rem;
+    }
+    
+    .message-text {
+      font-size: 0.9rem;
+    }
+  }
+  
+  /* High contrast support */
+  @media (prefers-contrast: high) {
+    .game-message {
+      background: black;
+      border: 2px solid white;
+      backdrop-filter: none;
+    }
+    
+    .game-message.info,
+    .game-message.success,
+    .game-message.warning,
+    .game-message.error {
+      background: black;
+    }
+  }
+  
+  /* Reduced motion */
+  @media (prefers-reduced-motion: reduce) {
+    .message-enter, .message-exit {
+      animation: none;
+      opacity: 1;
+      transform: translate(-50%, 0);
+    }
+    
+    .message-exit {
+      display: none;
+    }
+  }

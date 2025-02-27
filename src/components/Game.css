@@ -1,26 +1,30 @@
 .game-container {
-  max-width: 1400px;
+  max-width: 100%;
   margin: 0 auto;
-  padding: 2rem;
+  /* padding: 2rem 1rem; */
   text-align: center;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
   perspective: 1200px;
+  height: 85vh;
+  display: flex;
+  flex-direction: column;
 }
 
 .game-table {
-  background: #2c7a4c;
-  border-radius: 200px 200px 0 0;
+  background: linear-gradient(145deg, #298148, #1d6334);
+  border-radius: 220px/220px;
   padding: 3rem;
-  margin-bottom: 2rem;
   box-shadow: 
-    0 4px 6px rgba(0, 0, 0, 0.1),
+    0 10px 30px rgba(0, 0, 0, 0.15),
     inset 0 0 50px rgba(0, 0, 0, 0.3),
     0 0 0 15px #1a472e;
   position: relative;
-  transform: rotateX(15deg);
-  min-height: 700px;
-  width: 1200px;
-  margin: 0 auto;
+  transform-origin: bottom center;
+  min-height: 400px;
+  width: 50em;
+  margin: 0 auto 2rem;
+  flex: 1;
+  overflow: visible;
 }
 
 .table-felt {
@@ -29,7 +33,7 @@
   left: 0;
   right: 0;
   bottom: 0;
-  border-radius: 200px 200px 0 0;
+  border-radius: 220px/220px;
   background: 
     radial-gradient(circle at center, transparent 0%, rgba(0,0,0,0.2) 100%),
     linear-gradient(45deg, transparent 48%, rgba(255,255,255,0.1) 50%, transparent 52%),
@@ -40,26 +44,27 @@
 
 .dealer-section {
   position: absolute;
-  top: 20px;
   left: 50%;
   transform: translateX(-50%);
   width: 100%;
+  z-index: 5;
 }
 
 .player-section {
   position: absolute;
-  bottom: 200px;
+  bottom: 26%;
   left: 50%;
   transform: translateX(-50%);
   width: 100%;
+  z-index: 5;
 }
 
 .player-info {
   position: absolute;
-  bottom: -10%;
+  bottom: 100%;
   left: 50%;
   transform: translateX(-50%);
-  background: rgba(0, 0, 0, 0.85);
+  background: rgba(13, 47, 26, 0.85);
   padding: 0.8rem 2rem;
   border-radius: 25px;
   color: white;
@@ -73,10 +78,13 @@
 }
 
 h1 {
-  color: #2c3e50;
+  display: flex;
+  justify-content: center;
+  color: #f8f9fa;
   margin-bottom: 2rem;
   font-size: 2.5rem;
-  text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+  text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+  letter-spacing: 1px;
 }
 
 h2 {
@@ -91,6 +99,7 @@ h2 {
   gap: 1rem;
   justify-content: center;
   flex-wrap: wrap;
+  padding: 0.5rem;
 }
 
 .card {
@@ -100,102 +109,109 @@ h2 {
   min-width: 60px;
   font-size: 1.25rem;
   font-weight: bold;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-  transition: transform 0.2s ease;
+  box-shadow: 0 6px 10px rgba(0, 0, 0, 0.2);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
   border: 1px solid rgba(0,0,0,0.1);
+  position: relative;
+  overflow: hidden;
 }
 
 .card:hover {
-  transform: translateY(-2px) rotate(2deg);
+  transform: translateY(-5px) rotate(2deg);
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.25);
 }
 
-.betting-area {
+.card::after {
+  content: '';
   position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  width: 300px;
-  height: 100px;
-  border: 2px dashed rgba(255,255,255,0.3);
-  border-radius: 50px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  background: rgba(0, 0, 0, 0.2);
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(135deg, rgba(255,255,255,0.4) 0%, transparent 50%);
+  pointer-events: none;
 }
 
-.stacked-bet {
+.betting-section {
   position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
+  bottom: 0;
+  left: 0;
+  right: 0;
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 0.5rem;
-}
-
-.stacked-bet .placed-chip {
-  position: relative;
-  margin-top: -40px;
-  transform: none !important;
-  animation: none;
-}
-
-.stacked-bet .placed-chip:first-child {
-  margin-top: 0;
+  padding-bottom: 50px;
+  z-index: 10;
 }
 
 .placed-chips {
   position: absolute;
-  width: 100%;
-  height: 100%;
+  top: -30px;
+  left: -20px;
+  z-index: 1;
+  pointer-events: none;
 }
 
-.placed-chip {
+.placed-chips .chip {
   position: absolute;
-  width: 45px;
-  height: 45px;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-weight: bold;
-  color: white;
-  font-size: 0.9rem;
-  box-shadow: 
-    0 2px 4px rgba(0,0,0,0.2),
-    inset 0 -2px 4px rgba(0,0,0,0.3);
-  border: 2px solid rgba(255,255,255,0.5);
-  transform: rotate(var(--rotation));
-  animation: dropChip 0.3s ease-out;
+  animation: chipDrop 0.5s ease-out forwards;
+  box-shadow: 0 3px 6px rgba(0,0,0,0.3);
+  --rotation: 0deg;
+  z-index: 2;
 }
 
-@keyframes dropChip {
-  0% {
-    transform: translateY(-100px) rotate(var(--rotation));
-    opacity: 0;
-  }
-  100% {
-    transform: translateY(0) rotate(var(--rotation));
-    opacity: 1;
-  }
+.betting-controls-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+  padding: 20px;
+  border-radius: 15px;
+  background: rgba(0,0,0,0.2);
+  backdrop-filter: blur(5px);
+  margin-top: 10px;
+  position: relative;
+  z-index: 20;
+}
+
+.player-chips-display {
+  font-size: 1.5rem;
+  color: white;
+  padding: 10px 25px;
+  background: rgba(0,0,0,0.6);
+  border-radius: 25px;
+  margin-top: 10px;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+  text-shadow: 0 2px 4px rgba(0,0,0,0.5);
+  letter-spacing: 1px;
+}
+
+.current-bet {
+  position: absolute;
+  top: -40px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 1.25rem;
+  color: white;
+  text-shadow: 0 2px 4px rgba(0,0,0,0.5);
+  background: rgba(0,0,0,0.6);
+  padding: 0.5rem 1rem;
+  border-radius: 20px;
+  backdrop-filter: blur(5px);
+  white-space: nowrap;
 }
 
 .controls-container {
   position: fixed;
-  bottom: 10px;
+  bottom: 20px;
   left: 0;
   right: 0;
   padding: 1rem;
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 1rem;
-}
-
-.controls-container > * {
-  pointer-events: auto;
+  gap: 2rem;
+  z-index: 100;
 }
 
 .controls {
@@ -203,8 +219,11 @@ h2 {
   min-width: 300px;
   padding: 1rem;
   border-radius: 15px;
-  /* background: rgba(0, 0, 0, 0.85); */
-  /* backdrop-filter: blur(5px); */
+}
+
+.add-money-button {
+  background: linear-gradient(to bottom, #3498db, #2980b9);
+  color: white;
 }
 
 .chip-stack {
@@ -212,9 +231,7 @@ h2 {
   gap: 1rem;
   justify-content: center;
   padding: 1rem;
-  border-radius: 25px;
-  /* background: rgba(0, 0, 0, 0.85); */
-  /* backdrop-filter: blur(5px); */
+  border-radius: 15px;
 }
 
 .chip-button {
@@ -224,15 +241,16 @@ h2 {
   font-weight: bold;
   padding: 0;
   margin: 0;
-  border: 4px solid rgba(255, 255, 255, 0.5);
+  border: 4px solid rgba(255, 255, 255, 0.6);
   box-shadow: 
-    0 4px 6px rgba(0, 0, 0, 0.2),
-    inset 0 -4px 8px rgba(0,0,0,0.3);
-  transition: all 0.2s ease;
+    0 6px 10px rgba(0, 0, 0, 0.3),
+    inset 0 -4px 8px rgba(0,0,0,0.4);
+  transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.2s ease;
   color: white;
   cursor: pointer;
   position: relative;
   font-size: 1.1rem;
+  text-shadow: 0 1px 2px rgba(0,0,0,0.5);
 }
 
 .chip-button::after {
@@ -244,21 +262,40 @@ h2 {
   width: 80%;
   height: 80%;
   border-radius: 50%;
-  border: 2px dashed rgba(255,255,255,0.3);
+  border: 2px dashed rgba(255,255,255,0.4);
 }
 
-.chip-button:nth-child(1) { background: #e74c3c; }
-.chip-button:nth-child(2) { background: #3498db; }
-.chip-button:nth-child(3) { background: #2ecc71; }
-.chip-button:nth-child(4) { background: #f1c40f; }
+.chip-button::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  border-radius: 50%;
+  background: radial-gradient(circle at 30% 30%, rgba(255,255,255,0.3) 0%, transparent 70%);
+  pointer-events: none;
+}
+
+.chip-button:nth-child(1) { background: linear-gradient(135deg, #e74c3c, #c0392b); }
+.chip-button:nth-child(2) { background: linear-gradient(135deg, #3498db, #2980b9); }
+.chip-button:nth-child(3) { background: linear-gradient(135deg, #2ecc71, #27ae60); }
+.chip-button:nth-child(4) { background: linear-gradient(135deg, #f1c40f, #f39c12); }
 
 .chip-button:hover {
-  transform: translateY(-3px) scale(1.05);
+  transform: translateY(-5px) scale(1.05);
+  box-shadow: 0 10px 15px rgba(0,0,0,0.25), inset 0 -4px 8px rgba(0,0,0,0.4);
+}
+
+.chip-button:active {
+  transform: translateY(0) scale(0.95);
+  box-shadow: 0 3px 6px rgba(0,0,0,0.2), inset 0 -2px 5px rgba(0,0,0,0.4);
 }
 
 .chip-button:disabled {
   opacity: 0.5;
   transform: none;
+  box-shadow: 0 4px 6px rgba(0,0,0,0.2), inset 0 -4px 8px rgba(0,0,0,0.3);
 }
 
 .action-controls {
@@ -268,62 +305,85 @@ h2 {
   background: rgba(0,0,0,0.8);
   padding: 1rem;
   border-radius: 10px;
+  flex-wrap: wrap;
 }
 
 button {
-  background: #3498db;
+  background: linear-gradient(to bottom, #3498db, #2980b9);
   color: white;
   border: none;
   padding: 0.8rem 1.5rem;
-  border-radius: 6px;
+  border-radius: 8px;
   font-size: 1rem;
   cursor: pointer;
   transition: all 0.2s ease;
   text-transform: uppercase;
   letter-spacing: 1px;
   font-weight: bold;
+  box-shadow: 0 4px 6px rgba(0,0,0,0.15);
+  text-shadow: 0 1px 2px rgba(0,0,0,0.3);
+  position: relative;
+  overflow: hidden;
+}
+
+button::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 40%;
+  background: linear-gradient(to bottom, rgba(255,255,255,0.2), transparent);
+  pointer-events: none;
+  border-radius: 8px 8px 0 0;
 }
 
 button:hover {
-  transform: translateY(-1px);
-  box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+  transform: translateY(-3px);
+  box-shadow: 0 6px 10px rgba(0,0,0,0.2);
+}
+
+button:active {
+  transform: translateY(0);
+  box-shadow: 0 2px 3px rgba(0,0,0,0.15);
 }
 
 button:disabled {
-  background: #bdc3c7;
+  background: linear-gradient(to bottom, #95a5a6, #7f8c8d);
   cursor: not-allowed;
   transform: none;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
 }
 
-.message {
+/* .message {
   position: fixed;
   top: 100px;
   left: 50%;
   transform: translateX(-50%);
   font-size: 1.25rem;
   color: white;
-  background: rgba(0, 0, 0, 0.55);
+  background: rgba(0, 0, 0, 0.75);
   padding: 1rem 2rem;
   border-radius: 15px;
   z-index: 100;
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
-  backdrop-filter: blur(5px);
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
   max-width: 90vw;
   text-align: center;
-  animation: slideDown 0.3s ease-out;
-}
+  animation: messageAppear 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+} */
 
-@keyframes slideDown {
+/* @keyframes messageAppear {
   from {
-    transform: translate(-50%, -100%);
+    transform: translate(-50%, -30px);
     opacity: 0;
   }
   to {
     transform: translate(-50%, 0);
     opacity: 1;
   }
-}
+} */
 
 .result {
   font-size: 1.5rem;
@@ -331,7 +391,7 @@ button:disabled {
   margin-bottom: 1.5rem;
   color: white;
   animation: fadeIn 0.5s ease;
-  text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+  text-shadow: 0 2px 4px rgba(0,0,0,0.5);
   letter-spacing: 1px;
   line-height: 1.4;
 }
@@ -341,39 +401,80 @@ button:disabled {
   to { opacity: 1; transform: translateY(0); }
 }
 
-.current-bet {
-  position: absolute;
-  top: -30px;
-  left: 50%;
-  transform: translateX(-50%);
-  font-size: 1.25rem;
-  color: white;
-  text-shadow: 1px 1px 2px rgba(0,0,0,0.5);
-}
-
 /* Special button styles */
 button[onClick*="surrender"] {
-  background: #e74c3c;
+  background: linear-gradient(to bottom, #e74c3c, #c0392b);
 }
 
 button[onClick*="surrender"]:hover {
-  background: #c0392b;
+  background: linear-gradient(to bottom, #c0392b, #a93226);
 }
 
 button[onClick*="doubleDown"] {
-  background: #27ae60;
+  background: linear-gradient(to bottom, #27ae60, #219a52);
 }
 
 button[onClick*="doubleDown"]:hover {
-  background: #219a52;
+  background: linear-gradient(to bottom, #219a52, #1e8449);
 }
 
 button[onClick*="split"] {
-  background: #9b59b6;
+  background: linear-gradient(to bottom, #9b59b6, #8e44ad);
 }
 
 button[onClick*="split"]:hover {
-  background: #8e44ad;
+  background: linear-gradient(to bottom, #8e44ad, #7d3c98);
+}
+
+button[onClick*="hit"] {
+  background: linear-gradient(to bottom, #e67e22, #d35400);
+}
+
+button[onClick*="hit"]:hover {
+  background: linear-gradient(to bottom, #d35400, #a04000);
+}
+
+button[onClick*="stand"] {
+  background: linear-gradient(to bottom, #16a085, #138d75);
+}
+
+button[onClick*="stand"]:hover {
+  background: linear-gradient(to bottom, #138d75, #117a65);
+}
+
+button[onClick*="addMoney"],
+.add-money-button {
+  background: linear-gradient(to bottom, #f1c40f, #f39c12);
+  position: fixed;
+  right: 0px;
+  z-index: 1000;
+  padding: 0.5rem 1rem;
+  font-size: 0.85rem;
+  border-radius: 6px;
+  min-width: 100px;
+}
+
+button[onClick*="addMoney"]:hover,
+.add-money-button:hover {
+  background: linear-gradient(to bottom, #f39c12, #e67e22);
+}
+
+button[onClick*="resetBalance"],
+.reset-balance-button {
+  background: linear-gradient(to bottom, #e74c3c, #c0392b);
+  position: fixed;
+  right: 120px;
+  z-index: 1000;
+  padding: 0.5rem 1rem;
+  font-size: 0.85rem;
+  border-radius: 6px;
+  min-width: 100px;
+  margin: 0em 1em;
+}
+
+button[onClick*="resetBalance"]:hover,
+.reset-balance-button:hover {
+  background: linear-gradient(to bottom, #c0392b, #a93226);
 }
 
 .bet-actions {
@@ -383,259 +484,253 @@ button[onClick*="split"]:hover {
   margin-top: 0;
 }
 
-/* Mobile Responsiveness */
-@media (max-width: 1400px) {
-  .game-table {
-    width: 95vw;
-    min-height: 600px;
-    transform: rotateX(10deg);
+/* Add a card flip effect for dealer's hidden card */
+@keyframes flipReveal {
+  0% {
+    transform: rotateY(0deg);
+    background: #2980b9;
+    color: #2980b9;
+  }
+  49% {
+    color: #2980b9;
+  }
+  50% {
+    transform: rotateY(90deg);
+    background: #fff;
+  }
+  51% {
+    color: inherit;
+  }
+  100% {
+    transform: rotateY(180deg);
+    background: #fff;
   }
 }
 
-@media (max-width: 768px) {
+.card.hidden {
+  background: #2980b9;
+  color: #2980b9;
+  background-image: linear-gradient(135deg, #3498db 25%, #2980b9 25%, #2980b9 50%, #3498db 50%, #3498db 75%, #2980b9 75%, #2980b9 100%);
+  background-size: 20px 20px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+}
+
+.card.reveal {
+  animation: flipReveal 0.6s forwards;
+  transform-style: preserve-3d;
+}
+
+/* Add a subtle pattern to the table */
+.table-felt::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-image: 
+    radial-gradient(rgba(0,0,0,0.1) 1px, transparent 1px),
+    radial-gradient(rgba(0,0,0,0.1) 1px, transparent 1px);
+  background-size: 20px 20px;
+  background-position: 0 0, 10px 10px;
+  pointer-events: none;
+  opacity: 0.5;
+  border-radius: 200px 200px 0 0;
+}
+
+/* Add pulsing effect to the active player's turn */
+@keyframes pulseBorder {
+  0% {
+    box-shadow: 0 0 0 0 rgba(255, 255, 255, 0.6);
+  }
+  70% {
+    box-shadow: 0 0 0 10px rgba(255, 255, 255, 0);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(255, 255, 255, 0);
+  }
+}
+
+.player-section.active::before {
+  content: '';
+  position: absolute;
+  top: -10px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 80%;
+  height: calc(100% + 20px);
+  border-radius: 15px;
+  animation: pulseBorder 2s infinite;
+  pointer-events: none;
+}
+
+/* Add stack dropping animation for the chips */
+@keyframes chipDrop {
+  0% {
+    transform: translateY(-70px) rotate(var(--rotation, 0deg)) scale(1.2);
+    opacity: 0.7;
+  }
+  70% {
+    transform: translateY(5px) rotate(var(--rotation, 0deg)) scale(1);
+  }
+  85% {
+    transform: translateY(-3px) rotate(var(--rotation, 0deg));
+  }
+  100% {
+    transform: translateY(0) rotate(var(--rotation, 0deg));
+    opacity: 1;
+  }
+}
+
+/* Responsive Design */
+/* Large screens (default, desktop) - styles already defined above */
+
+/* Medium screens (small desktop window, iPad, big phone) */
+@media screen and (max-width: 1024px) {
   .game-container {
-    padding: 1rem;
-    height: 100vh;
-    perspective: none;
+    height: 90vh;
   }
-
+  
   .game-table {
-    transform: none;
-    min-height: calc(100vh - 200px);
-    padding: 1.5rem;
-    border-radius: 30px 30px 0 0;
-    margin: 0;
-    width: 100%;
+    width: 42em;
+    padding: 2.5rem;
+    min-height: 350px;
   }
-
-  .table-felt {
-    border-radius: 30px 30px 0 0;
+  
+  h1 {
+    font-size: 2rem;
+    margin-bottom: 1.5rem;
   }
-
-  .dealer-section {
-    top: 20px;
+  
+  .betting-controls-container {
+    flex-direction: column;
+    gap: 0.75rem;
   }
-
-  .player-section {
-    bottom: 160px;
+  
+  .controls-container {
+    padding: 10px;
   }
-
-  .betting-area {
-    width: 90%;
-    max-width: 300px;
-    height: 80px;
-  }
-
-  .chip-stack {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 0.8rem;
-    width: 100%;
-    max-width: 300px;
-    padding: 0.8rem;
-  }
-
-  .chip-button {
-    width: 100%;
-    aspect-ratio: 1;
-    font-size: 1rem;
-  }
-
-  .controls {
-    width: 100%;
-    min-width: auto;
-  }
-
-  .action-controls {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 0.8rem;
-  }
-
-  button {
-    width: 100%;
-    padding: 0.8rem;
-    font-size: 0.9rem;
-  }
-}
-
-@media (max-width: 480px) {
-  .game-table {
-    min-height: calc(100vh - 180px);
-    border-radius: 20px 20px 0 0;
-    padding: 1rem;
-  }
-
-  .table-felt {
-    border-radius: 20px 20px 0 0;
-  }
-
-  .chip-button {
-    font-size: 0.9rem;
-  }
-
-  .controls {
-    padding: 0.8rem;
-  }
-
-  button {
-    padding: 0.7rem;
-    font-size: 0.8rem;
-  }
-
-  .message {
-    font-size: 1rem;
-    padding: 0.8rem 1rem;
-  }
-}
-
-/* iPhone SE and other small devices */
-@media (max-width: 380px) {
-  .game-table {
-    min-height: calc(100vh - 150px);
-  }
-
+  
   .card {
-    padding: 0.6rem 0.4rem;
-    min-width: 35px;
-    font-size: 0.8rem;
+    min-width: 50px;
+    padding: 1.25rem 0.75rem;
+    font-size: 1.1rem;
   }
-
+  
+  .cards {
+    gap: 0.75rem;
+  }
+  
   .chip-button {
     width: 45px;
     height: 45px;
-    font-size: 0.9rem;
   }
-
-  .player-info {
-    font-size: 0.9rem;
-    padding: 0.6rem 1rem;
-  }
-}
-
-/* Landscape mode */
-@media (max-height: 600px) and (orientation: landscape) {
-  .game-container {
-    height: auto;
-    min-height: 100vh;
-  }
-
-  .game-table {
-    min-height: 450px;
-  }
-
-  .dealer-section {
-    top: 5px;
-  }
-
-  .player-section {
-    bottom: 140px;
-  }
-
-  .chip-stack {
-    position: fixed;
-    bottom: 70px;
-    padding: 0.5rem;
-  }
-
-  .controls {
-    padding: 0.5rem;
-  }
-
-  .player-info {
-    bottom: 120px;
-  }
-
-  .card {
-    padding: 0.6rem 0.4rem;
-    min-width: 35px;
-  }
-}
-
-/* Safe area for notched phones */
-@supports (padding: max(0px)) {
-  .controls {
-    padding-bottom: max(1rem, env(safe-area-inset-bottom));
-  }
-
-  .chip-stack {
-    bottom: calc(85px + env(safe-area-inset-bottom));
-  }
-}
-
-/* Touch device optimizations */
-@media (hover: none) {
-  .card:hover {
-    transform: none;
-  }
-
-  .chip-button:hover {
-    transform: none;
-  }
-
-  button:hover {
-    transform: none;
-    box-shadow: none;
-  }
-
-  button:active {
-    transform: scale(0.95);
-  }
-}
-
-/* Loading state for buttons */
-button:active {
-  transform: scale(0.95);
-  transition: transform 0.1s;
-}
-
-/* Prevent text selection */
-.card, .chip-button, button, .message, .player-info {
-  -webkit-touch-callout: none;
-  -webkit-user-select: none;
-  user-select: none;
-}
-
-/* Dark mode support */
-@media (prefers-color-scheme: dark) {
-  .message,
-  .player-info,
-  .controls,
-  .chip-stack {
-    background: rgba(0,0,0,0.9);
-  }
-}
-
-/* High contrast support */
-@media (prefers-contrast: high) {
-  .message,
-  .player-info,
-  .controls,
-  .chip-stack {
-    background: #000000;
-    border: 2px solid #ffffff;
-  }
-
+  
   button {
-    border: 2px solid #ffffff;
+    padding: 0.6rem 1.2rem;
+    font-size: 0.9rem;
   }
 }
 
-/* Reduced motion support */
-@media (prefers-reduced-motion: reduce) {
-  .card:hover {
-    transform: none;
+/* Small screens (iPhone 15 Pro) */
+@media screen and (max-width: 430px) {
+  .game-container {
+    height: 95vh;
+    padding: 0.5rem;
   }
-
-  .chip-button:hover {
-    transform: none;
+  
+  .game-table {
+    width: 100%;
+    padding: 1.5rem;
+    min-height: 300px;
+    border-radius: 150px/150px;
+    box-shadow: 
+      0 5px 15px rgba(0, 0, 0, 0.15),
+      inset 0 0 30px rgba(0, 0, 0, 0.3),
+      0 0 0 8px #1a472e;
   }
-
-  .placed-chip {
-    animation: none;
+  
+  .table-felt {
+    border-radius: 150px/150px;
   }
-
-  .message {
-    animation: none;
+  
+  h1 {
+    font-size: 1.6rem;
+    margin-bottom: 1rem;
   }
-} 
+  
+  h2 {
+    font-size: 1.2rem;
+  }
+  
+  .dealer-section {
+    top: 5%;
+  }
+  
+  .player-section {
+    bottom: 30%;
+  }
+  
+  .card {
+    min-width: 40px;
+    padding: 1rem 0.6rem;
+    font-size: 0.9rem;
+  }
+  
+  .cards {
+    gap: 0.5rem;
+  }
+  
+  .player-info {
+    padding: 0.5rem 1rem;
+    font-size: 0.9rem;
+    bottom: 105%;
+  }
+  
+  .betting-section {
+    padding-bottom: 15px;
+  }
+  
+  .betting-controls-container {
+    width: 100%;
+  }
+  
+  .chip-stack {
+    gap: 0.3rem;
+    margin-bottom: 0.5rem;
+  }
+  
+  .chip-button {
+    width: 35px;
+    height: 35px;
+    font-size: 0.7rem;
+  }
+  
+  .controls {
+    gap: 0.3rem;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+  
+  button {
+    padding: 0.5rem 0.8rem;
+    font-size: 0.8rem;
+    margin: 0.1rem;
+  }
+  
+  .action-controls {
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 0.3rem;
+  }
+  
+  .current-bet {
+    font-size: 0.9rem;
+    padding: 0.4rem 0.8rem;
+  }
+  
+  .player-chips-display {
+    font-size: 0.9rem;
+    padding: 0.4rem 0.8rem;
+  }
+}

@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { GameState, Card, Player } from '../types/game';
+import { GameState, Card as CardType, Player } from '../types/game';
 import {
   createDeck,
   createPlayer,
@@ -9,18 +9,15 @@ import {
   canSplitHand,
   checkForNaturalBlackjack
 } from '../utils/gameUtils';
+import GameMessage from './GameMessage';
+import GameAnimation from './GameAnimation';
+import GameTable from './GameTable';
+import { PlacedChip } from './PlacedChip';
 import './Game.css';
 
 const MINIMUM_BET = 5;
 const INITIAL_CHIPS = 500;
 const CHIP_VALUES = [5, 25, 100, 500];
-
-interface PlacedChip {
-  value: number;
-  x: number;
-  y: number;
-  rotation: number;
-}
 
 export default function Game() {
   const [gameState, setGameState] = useState<GameState>({
@@ -37,17 +34,87 @@ export default function Game() {
 
   const [currentBetAmount, setCurrentBetAmount] = useState(0);
   const [placedChips, setPlacedChips] = useState<PlacedChip[]>([]);
+  const [showDealerCard, setShowDealerCard] = useState(false);
+  const [isDealing, setIsDealing] = useState(false);
+  const [isAnimating, setIsAnimating] = useState(false);
+  
+  // State for animation and message components
+  const [showAnimation, setShowAnimation] = useState(false);
+  const [animationType, setAnimationType] = useState<'win' | 'lose' | 'push' | 'blackjack' | 'bust'>('win');
+  const [showMessage, setShowMessage] = useState(false);
+  const [messageType, setMessageType] = useState<'info' | 'success' | 'warning' | 'error'>('info');
+
+  // Show dealer card when game is over
+  useEffect(() => {
+    if (gameState.gameStatus === 'gameOver') {
+      setTimeout(() => {
+        setShowDealerCard(true);
+      }, 300);
+      
+      // Show appropriate game animation based on winner
+      if (gameState.winner) {
+        setTimeout(() => {
+          if (gameState.winner === 'player') {
+            if (checkForNaturalBlackjack(gameState.player.hand)) {
+              setAnimationType('blackjack');
+            } else {
+              setAnimationType('win');
+            }
+          } else if (gameState.winner === 'dealer') {
+            if (gameState.player.busted) {
+              setAnimationType('bust');
+            } else {
+              setAnimationType('lose');
+            }
+          } else if (gameState.winner === 'push') {
+            setAnimationType('push');
+          }
+          setShowAnimation(true);
+        }, 800);
+      }
+    } else {
+      setShowDealerCard(false);
+    }
+  }, [gameState.gameStatus, gameState.winner, gameState.player.hand, gameState.player.busted]);
+
+  // Display game messages when status changes
+  useEffect(() => {
+    if (gameState.message) {
+      // Determine message type based on game state
+      let type: 'info' | 'success' | 'warning' | 'error' = 'info';
+      
+      if (gameState.winner === 'player') {
+        type = 'success';
+      } else if (gameState.winner === 'dealer') {
+        type = 'error';
+      } else if (gameState.winner === 'push') {
+        type = 'warning';
+      }
+      
+      setMessageType(type);
+      setShowMessage(true);
+      
+      const timer = setTimeout(() => {
+        setShowMessage(false);
+      }, 3000);
+      
+      return () => clearTimeout(timer);
+    }
+  }, [gameState.message, gameState.winner]);
 
   const addToBet = (amount: number) => {
     if (gameState.player.chips < amount || currentBetAmount + amount > gameState.player.chips) return;
     setCurrentBetAmount(prev => prev + amount);
     
-    // Add a new chip with random position within the betting area
+    // Add a custom CSS variable for rotation to be used in animations
+    const rotation = Math.random() * 360;
+    
+    // Make chips spread widely across the entire table area, including behind controls
     const newChip: PlacedChip = {
       value: amount,
-      x: Math.random() * 220 + 40,
-      y: Math.random() * 120 + 40,
-      rotation: Math.random() * 360,
+      x: Math.random() * 800 + 50, // Wider spread across table width (50-850px)
+      y: Math.random() * 500 + 50, // Deeper spread across table height (50-550px)
+      rotation: rotation,
     };
     setPlacedChips(prev => [...prev, newChip]);
   };
@@ -58,21 +125,43 @@ export default function Game() {
   };
 
   const placeBet = () => {
-    if (currentBetAmount < MINIMUM_BET || gameState.player.chips < currentBetAmount) return;
+    if (currentBetAmount < MINIMUM_BET) return;
     
-    const player = { 
-      ...gameState.player, 
-      bet: currentBetAmount, 
-      chips: gameState.player.chips - currentBetAmount 
+    const player = {
+      ...gameState.player,
+      chips: gameState.player.chips - currentBetAmount,
+      bet: currentBetAmount,
     };
+    
+    setIsDealing(true);
+    
+    // Start dealing animation
+    setTimeout(() => {
+      startNewGame(player);
+      setIsDealing(false);
+    }, 500);
+  };
+
+  const addMoney = () => {
     setGameState(prev => ({
       ...prev,
-      player,
-      currentBet: currentBetAmount,
-      gameStatus: 'playing',
+      player: {
+        ...prev.player,
+        chips: prev.player.chips + 100000
+      },
+      message: '$100,000 added to your balance!'
     }));
-    startNewGame(player);
-    setCurrentBetAmount(0);
+  };
+
+  const resetBalance = () => {
+    setGameState(prev => ({
+      ...prev,
+      player: {
+        ...prev.player,
+        chips: 1000
+      },
+      message: 'Balance reset to $1000!'
+    }));
   };
 
   const startNewGame = (player: Player) => {
@@ -90,105 +179,45 @@ export default function Game() {
     
     player.score = calculateHandValue(player.hand);
     dealer.score = calculateHandValue(dealer.hand);
+
+    // Check for player blackjack or ability to split
     player.canSplit = canSplitHand(player.hand);
 
-    const newGameState: GameState = {
+    const naturalBlackjack = checkForNaturalBlackjack(player.hand);
+    
+    const newGameState = {
       deck: newDeck4,
-      player,
-      dealer,
-      gameStatus: 'playerTurn',
-      winner: null,
+      player: player,
+      dealer: dealer,
+      gameStatus: naturalBlackjack ? 'gameOver' as const : 'playerTurn' as const,
+      winner: naturalBlackjack ? 'player' as const : null,
       canDoubleDown: player.chips >= player.bet,
       canSurrender: true,
       currentBet: player.bet,
-      message: '',
+      message: naturalBlackjack ? 'Blackjack! You win!' : 'Your turn',
     };
-
-    const checkedState = checkGameState(newGameState);
-    setGameState(checkedState);
-  };
-
-  const split = () => {
-    if (!gameState.player.canSplit || gameState.player.chips < gameState.currentBet) return;
-
-    const [newCard1, newDeck1] = dealCard(gameState.deck);
-    const [newCard2, newDeck2] = dealCard(newDeck1);
-
-    const firstHand: Player = {
-      ...gameState.player,
-      hand: [gameState.player.hand[0], newCard1],
-      score: calculateHandValue([gameState.player.hand[0], newCard1]),
-      chips: gameState.player.chips - gameState.currentBet,
-      canSplit: false,
-    };
-
-    const secondHand: Player = {
-      ...gameState.player,
-      hand: [gameState.player.hand[1], newCard2],
-      score: calculateHandValue([gameState.player.hand[1], newCard2]),
-      bet: gameState.currentBet,
-      canSplit: false,
-    };
-
-    firstHand.splitHand = secondHand;
-
-    setGameState({
-      ...gameState,
-      deck: newDeck2,
-      player: firstHand,
-      canDoubleDown: firstHand.chips >= firstHand.bet,
-      canSurrender: false,
-      message: 'Playing first hand',
-    });
+    
+    // If player has blackjack, calculate winnings
+    if (naturalBlackjack) {
+      // Blackjack pays 3:2
+      const winAmount = player.bet + Math.floor(player.bet * 1.5);
+      newGameState.player.chips += winAmount;
+    }
+    
+    setGameState(newGameState);
   };
 
   const hit = () => {
-    if (gameState.gameStatus !== 'playerTurn') return;
-
-    const [card, newDeck] = dealCard(gameState.deck);
-    const newHand = [...gameState.player.hand, card];
-    const newScore = calculateHandValue(newHand);
-    const busted = newScore > 21;
-
-    if (gameState.player.splitHand) {
-      // If this is the first hand of a split
-      if (busted) {
-        // Move to second hand if first hand busts
-        const secondHand = gameState.player.splitHand;
-        setGameState({
-          ...gameState,
-          deck: newDeck,
-          player: {
-            ...gameState.player,
-            hand: newHand,
-            score: newScore,
-            busted,
-            splitHand: undefined,
-          },
-          message: 'Playing second hand',
-        });
-        // Start playing the second hand
-        setGameState(prev => ({
-          ...prev,
-          player: secondHand,
-          canDoubleDown: secondHand.chips >= secondHand.bet,
-          message: 'Playing second hand',
-        }));
-      } else {
-        setGameState({
-          ...gameState,
-          deck: newDeck,
-          player: {
-            ...gameState.player,
-            hand: newHand,
-            score: newScore,
-            busted,
-          },
-          canDoubleDown: false,
-        });
-      }
-    } else {
-      // Normal hit or second hand of split
+    if (gameState.gameStatus !== 'playerTurn' || isAnimating) return;
+    
+    setIsAnimating(true);
+    
+    setTimeout(() => {
+      const [card, newDeck] = dealCard(gameState.deck);
+      const newHand = [...gameState.player.hand, card];
+      const newScore = calculateHandValue(newHand);
+      const busted = newScore > 21;
+      
       const newGameState = {
         ...gameState,
         deck: newDeck,
@@ -197,109 +226,51 @@ export default function Game() {
           hand: newHand,
           score: newScore,
           busted,
-          canSplit: false,
         },
-        canDoubleDown: false,
-        canSurrender: false,
       };
-
-      setGameState(checkGameState(newGameState));
-    }
+      
+      const checkedState = checkGameState(newGameState);
+      
+      if (busted) {
+        checkedState.gameStatus = 'gameOver' as const;
+        checkedState.winner = 'dealer';
+        checkedState.message = 'Busted! You went over 21.';
+      }
+      
+      setGameState(checkedState);
+      setIsAnimating(false);
+      
+      if (busted) {
+        setShowDealerCard(true);
+      }
+    }, 500);
   };
 
   const stand = () => {
-    if (gameState.gameStatus !== 'playerTurn') return;
-
-    if (gameState.player.splitHand) {
-      // If this is the first hand of a split
-      const secondHand = gameState.player.splitHand;
-      const firstHand = { ...gameState.player, splitHand: undefined };
+    if (gameState.gameStatus !== 'playerTurn' || isAnimating) return;
+    
+    setIsAnimating(true);
+    
+    setTimeout(() => {
+      setGameState({
+        ...gameState,
+        gameStatus: 'dealerTurn' as const,
+      });
       
-      // Store the first hand's final state
-      setGameState(prev => ({
-        ...prev,
-        player: secondHand,
-        canDoubleDown: secondHand.chips >= secondHand.bet,
-        message: 'Playing second hand',
-        // Store the first hand for later comparison
-        splitHand: firstHand,
-      }));
-    } else if (gameState.splitHand) {
-      // If this is the second hand of a split
-      const firstHand = gameState.splitHand;
-      dealerPlayWithSplit(firstHand, gameState.player);
-    } else {
-      // Normal stand
       dealerPlay();
-    }
+      setIsAnimating(false);
+    }, 500);
   };
 
-  const dealerPlayWithSplit = (firstHand: Player, secondHand: Player) => {
-    let currentDealerHand = [...gameState.dealer.hand];
-    let currentDeck = [...gameState.deck];
-    
-    while (calculateHandValue(currentDealerHand) < 17) {
-      const [card, newDeck] = dealCard(currentDeck);
-      currentDealerHand = [...currentDealerHand, card];
-      currentDeck = newDeck;
-    }
-
-    const dealerScore = calculateHandValue(currentDealerHand);
-    const dealerBusted = dealerScore > 21;
-
-    const dealer = {
-      ...gameState.dealer,
-      hand: currentDealerHand,
-      score: dealerScore,
-      busted: dealerBusted,
-    };
-
-    // Compare dealer's hand with both split hands
-    let totalWinnings = 0;
-    let message = '';
-
-    // First hand result
-    if (!firstHand.busted) {
-      if (dealerBusted || firstHand.score > dealerScore) {
-        totalWinnings += firstHand.bet * 2;
-        message += 'First hand wins! ';
-      } else if (firstHand.score === dealerScore) {
-        totalWinnings += firstHand.bet;
-        message += 'First hand push. ';
-      } else {
-        message += 'First hand loses. ';
-      }
-    }
-
-    // Second hand result
-    if (!secondHand.busted) {
-      if (dealerBusted || secondHand.score > dealerScore) {
-        totalWinnings += secondHand.bet * 2;
-        message += 'Second hand wins!';
-      } else if (secondHand.score === dealerScore) {
-        totalWinnings += secondHand.bet;
-        message += 'Second hand push.';
-      } else {
-        message += 'Second hand loses.';
-      }
-    }
-
-    setGameState({
-      ...gameState,
-      deck: currentDeck,
-      dealer,
-      player: {
-        ...secondHand,
-        chips: firstHand.chips + totalWinnings,
-      },
-      gameStatus: 'gameOver' as const,
-      message,
-      splitHand: undefined,
-    });
+  const split = () => {
+    // Implementation of split would go here
+    console.log("Split feature not implemented yet");
   };
 
   const doubleDown = () => {
-    if (!gameState.canDoubleDown) return;
+    if (!gameState.canDoubleDown || isAnimating) return;
+    
+    setIsAnimating(true);
 
     const additionalBet = gameState.currentBet;
     const player = {
@@ -308,256 +279,276 @@ export default function Game() {
       bet: gameState.player.bet + additionalBet,
     };
 
-    const [card, newDeck] = dealCard(gameState.deck);
-    const newHand = [...player.hand, card];
-    const newScore = calculateHandValue(newHand);
-    const busted = newScore > 21;
+    setTimeout(() => {
+      const [card, newDeck] = dealCard(gameState.deck);
+      const newHand = [...player.hand, card];
+      const newScore = calculateHandValue(newHand);
+      const busted = newScore > 21;
 
-    const newGameState = {
-      ...gameState,
-      deck: newDeck,
-      player: {
-        ...player,
-        hand: newHand,
-        score: newScore,
-        busted,
-      },
-      currentBet: player.bet,
-      gameStatus: 'gameOver' as const,
-    };
+      const newGameState = {
+        ...gameState,
+        deck: newDeck,
+        player: {
+          ...player,
+          hand: newHand,
+          score: newScore,
+          busted,
+        },
+        currentBet: player.bet,
+      };
 
-    setGameState(checkGameState(newGameState));
-    if (!busted) {
-      dealerPlay();
-    }
+      const checkedState = checkGameState(newGameState);
+      
+      if (busted) {
+        checkedState.gameStatus = 'gameOver' as const;
+        setGameState(checkedState);
+        setIsAnimating(false);
+      } else {
+        // If not busted, dealer plays
+        setTimeout(() => {
+          setGameState(checkedState);
+          dealerPlay();
+          setIsAnimating(false);
+        }, 700);
+      }
+    }, 500);
   };
 
   const surrender = () => {
-    if (!gameState.canSurrender) return;
+    if (!gameState.canSurrender || isAnimating) return;
+    
+    setIsAnimating(true);
 
-    const refundAmount = Math.floor(gameState.player.bet / 2);
-    setGameState({
-      ...gameState,
-      player: {
-        ...gameState.player,
-        chips: gameState.player.chips + refundAmount,
-      },
-      gameStatus: 'gameOver',
-      winner: 'dealer',
-      message: 'Surrendered - Half bet returned',
-    });
+    setTimeout(() => {
+      const refundAmount = Math.floor(gameState.player.bet / 2);
+      setGameState({
+        ...gameState,
+        player: {
+          ...gameState.player,
+          chips: gameState.player.chips + refundAmount,
+        },
+        gameStatus: 'gameOver' as const,
+        winner: 'dealer',
+        message: 'Surrendered - Half bet returned',
+      });
+      setIsAnimating(false);
+    }, 500);
   };
 
   const dealerPlay = () => {
     let currentDealerHand = [...gameState.dealer.hand];
     let currentDeck = [...gameState.deck];
     
-    while (calculateHandValue(currentDealerHand) < 17) {
-      const [card, newDeck] = dealCard(currentDeck);
-      currentDealerHand = [...currentDealerHand, card];
-      currentDeck = newDeck;
-    }
-
-    const dealerScore = calculateHandValue(currentDealerHand);
-    const dealerBusted = dealerScore > 21;
-
-    const newGameState = {
-      ...gameState,
-      deck: currentDeck,
-      dealer: {
-        ...gameState.dealer,
-        hand: currentDealerHand,
-        score: dealerScore,
-        busted: dealerBusted,
-      },
-      gameStatus: 'gameOver' as const,
+    // Simulate dealer drawing cards with animation
+    const drawDealerCards = (callback: () => void) => {
+      setTimeout(() => {
+        if (calculateHandValue(currentDealerHand) < 17) {
+          const [card, newDeck] = dealCard(currentDeck);
+          currentDealerHand = [...currentDealerHand, card];
+          currentDeck = newDeck;
+          
+          setGameState(prev => ({
+            ...prev,
+            dealer: {
+              ...prev.dealer,
+              hand: currentDealerHand,
+              score: calculateHandValue(currentDealerHand)
+            },
+            deck: currentDeck
+          }));
+          
+          drawDealerCards(callback);
+        } else {
+          callback();
+        }
+      }, 700);
     };
-
-    const finalState = checkGameState(newGameState);
     
-    // Update chips based on the outcome
-    if (finalState.winner === 'player') {
-      const winAmount = checkForNaturalBlackjack(gameState.player.hand) 
-        ? Math.floor(gameState.currentBet * 2.5)  // 3:2 payout for blackjack
-        : gameState.currentBet * 2;  // Regular win
-      finalState.player.chips += winAmount;
-    } else if (finalState.winner === 'push') {
-      finalState.player.chips += gameState.currentBet;  // Return bet
-    }
+    drawDealerCards(() => {
+      const checkFinalGameState = () => {
+        const dealerScore = calculateHandValue(currentDealerHand);
+        const playerScore = gameState.player.score;
+        const dealerHasBlackjack = checkForNaturalBlackjack(currentDealerHand);
+        const playerHasBlackjack = checkForNaturalBlackjack(gameState.player.hand);
+        
+        let winner: "player" | "dealer" | "push" | null = null;
+        let message = '';
+        
+        // First check for blackjack
+        if (playerHasBlackjack) {
+          if (dealerHasBlackjack) {
+            winner = 'push';
+            message = 'Push! Both have Blackjack.';
+          } else {
+            winner = 'player';
+            message = 'Blackjack! You win with a natural 21!';
+          }
+        } else if (dealerHasBlackjack) {
+          winner = 'dealer';
+          message = 'Dealer has Blackjack! You lose.';
+        }
+        // If no blackjack, check scores
+        else if (gameState.player.busted) {
+          winner = 'dealer';
+          message = 'Busted! You went over 21.';
+        } else if (dealerScore > 21) {
+          winner = 'player';
+          message = 'Dealer busts! You win!';
+        } else if (dealerScore > playerScore) {
+          winner = 'dealer';
+          message = 'Dealer wins with ' + dealerScore + '.';
+        } else if (playerScore > dealerScore) {
+          winner = 'player';
+          message = 'You win with ' + playerScore + '!';
+        } else {
+          winner = 'push';
+          message = 'Push! It\'s a tie.';
+        }
+        
+        // Calculate final state with correct winnings
+        const finalState = {
+          ...gameState,
+          dealer: {
+            ...gameState.dealer,
+            hand: currentDealerHand,
+            score: dealerScore,
+            busted: dealerScore > 21
+          },
+          deck: currentDeck,
+          gameStatus: 'gameOver' as const,
+          winner,
+          message
+        };
+        
+        // Update chips based on the outcome with correct blackjack payout
+        if (finalState.winner === 'player') {
+          // Calculate the correct payout amount
+          let winAmount;
+          if (playerHasBlackjack) {
+            // Blackjack pays 3:2, so bet + (bet * 1.5)
+            winAmount = gameState.currentBet + Math.floor(gameState.currentBet * 1.5);
+          } else {
+            // Regular win pays 1:1, so bet + bet
+            winAmount = gameState.currentBet * 2;
+          }
+          
+          finalState.player.chips += winAmount;
+          
+          console.log("Player wins:", {
+            bet: gameState.currentBet,
+            hasBlackjack: playerHasBlackjack,
+            winAmount: winAmount,
+            finalChips: finalState.player.chips
+          });
+        } else if (finalState.winner === 'push') {
+          finalState.player.chips += gameState.currentBet;  // Return bet
+        }
+        
+        return finalState;
+      };
+      
+      setGameState(checkFinalGameState());
+    });
+  };
 
-    setGameState(finalState);
+  const playAgain = () => {
+    setGameState({
+      ...gameState,
+      gameStatus: 'betting' as const,
+      message: 'Place your bet!',
+      winner: null,
+      player: {
+        ...gameState.player,
+        hand: [],
+        score: 0,
+        busted: false,
+        bet: 0,
+        canSplit: false,
+      },
+      dealer: createPlayer(true),
+      currentBet: 0,
+      canDoubleDown: false,
+      canSurrender: false,
+    });
+    setPlacedChips([]);
+    setShowDealerCard(false);
+    setShowAnimation(false);
+  };
+
+  const onAnimationComplete = () => {
+    setShowAnimation(false);
+  };
+
+  const handleSliderBetChange = (amount: number) => {
+    // If existing bet is smaller, add the difference
+    if (currentBetAmount < amount) {
+      // Calculate what chip to add based on the difference
+      const difference = amount - currentBetAmount;
+      addCustomBet(difference);
+    } 
+    // If existing bet is larger, clear and set to new value
+    else if (currentBetAmount > amount) {
+      clearBet();
+      if (amount > 0) {
+        addCustomBet(amount);
+      }
+    }
+  };
+
+  const addCustomBet = (amount: number) => {
+    if (gameState.player.chips < amount || amount <= 0) return;
+    
+    setCurrentBetAmount(prev => prev + amount);
+    
+    // Add a custom CSS variable for rotation to be used in animations
+    const rotation = Math.random() * 360;
+    
+    // Make chips spread widely across the entire table area, including behind controls
+    const newChip: PlacedChip = {
+      value: amount,
+      x: Math.random() * 800 + 50, // Wider spread across table width (50-850px)
+      y: Math.random() * 500 + 50, // Deeper spread across table height (50-550px)
+      rotation: rotation,
+    };
+    setPlacedChips(prev => [...prev, newChip]);
   };
 
   return (
     <div className="game-container">
+      <button onClick={addMoney} className="add-money-button">Add $100K</button>
+      <button onClick={resetBalance} className="reset-balance-button">Reset $1K</button>
       <h1>BlackJack</h1>
       
-      <div className="game-table">
-        <div className="table-felt" />
-        
-        <div className="dealer-section">
-          <h2>Dealer</h2>
-          <div className="cards">
-            {gameState.dealer.hand.map((card, index) => (
-              <div key={index} className="card">
-                {gameState.gameStatus === 'gameOver' || index !== 1 ? (
-                  `${card.rank}${card.suit.charAt(0).toUpperCase()}`
-                ) : (
-                  '🂠'
-                )}
-              </div>
-            ))}
-          </div>
-          {gameState.gameStatus === 'gameOver' && (
-            <div className="player-info">
-              Score: {gameState.dealer.score}
-            </div>
-          )}
-        </div>
+      <GameMessage
+        message={gameState.message}
+        type={messageType}
+        isVisible={showMessage}
+      />
+      
+      <GameAnimation
+        type={animationType}
+        isVisible={showAnimation}
+        onAnimationComplete={onAnimationComplete}
+      />
 
-        <div className="player-section">
-          <div className="cards">
-            {gameState.player.hand.map((card, index) => (
-              <div key={index} className="card">
-                {`${card.rank}${card.suit.charAt(0).toUpperCase()}`}
-              </div>
-            ))}
-          </div>
-        </div>
-
-        {gameState.gameStatus !== 'betting' && placedChips.length > 0 && (
-          <div className="stacked-bet">
-            {placedChips.map((chip, index) => (
-              <div
-                key={index}
-                className="placed-chip"
-                style={{
-                  background: 
-                    chip.value === 5 ? '#e74c3c' : 
-                    chip.value === 25 ? '#3498db' : 
-                    chip.value === 100 ? '#2ecc71' :
-                    '#f1c40f',
-                }}
-              >
-                ${chip.value}
-              </div>
-            ))}
-          </div>
-        )}
-
-        {gameState.gameStatus === 'betting' && (
-          <div className="betting-area">
-            <div className="current-bet">
-              Current Bet: ${currentBetAmount}
-            </div>
-            <div className="placed-chips">
-              {placedChips.map((chip, index) => (
-                <div
-                  key={index}
-                  className="placed-chip"
-                  style={{
-                    left: `${chip.x}px`,
-                    top: `${chip.y}px`,
-                    background: 
-                      chip.value === 5 ? '#e74c3c' : 
-                      chip.value === 25 ? '#3498db' : 
-                      chip.value === 100 ? '#2ecc71' :
-                      '#f1c40f',
-                    '--rotation': `${chip.rotation}deg`,
-                  } as React.CSSProperties}
-                >
-                  ${chip.value}
-                </div>
-              ))}
-            </div>
-          </div>
-        )}
-      </div>
-
-      <div className="player-info">
-        Player - Score: {gameState.player.score} | Chips: ${gameState.player.chips}
-      </div>
-
-      <div className="message">{gameState.message}</div>
-
-      <div className="controls-container">
-        {gameState.gameStatus === 'betting' && (
-          <>
-            <div className="chip-stack">
-              {CHIP_VALUES.map(value => (
-                <button
-                  key={value}
-                  onClick={() => addToBet(value)}
-                  disabled={gameState.player.chips < value}
-                  className="chip-button"
-                >
-                  ${value}
-                </button>
-              ))}
-            </div>
-            <div className="controls">
-              <div className="bet-actions">
-                <button onClick={clearBet}>Clear</button>
-                <button 
-                  onClick={placeBet}
-                  disabled={currentBetAmount < MINIMUM_BET}
-                >
-                  Place Bet
-                </button>
-              </div>
-            </div>
-          </>
-        )}
-        
-        {gameState.gameStatus === 'playerTurn' && (
-          <div className="controls">
-            <div className="action-controls">
-              <button onClick={hit}>Hit</button>
-              <button onClick={stand}>Stand</button>
-              {gameState.canDoubleDown && (
-                <button onClick={doubleDown}>Double Down</button>
-              )}
-              {gameState.canSurrender && (
-                <button onClick={surrender}>Surrender</button>
-              )}
-              {gameState.player.canSplit && (
-                <button onClick={split}>Split</button>
-              )}
-            </div>
-          </div>
-        )}
-        
-        {gameState.gameStatus === 'gameOver' && (
-          <div className="controls">
-            <div className="result">
-              {gameState.message}
-            </div>
-            <button 
-              onClick={() => {
-                setGameState({
-                  ...gameState,
-                  gameStatus: 'betting',
-                  message: 'Place your bet!',
-                  winner: null,
-                  player: {
-                    ...gameState.player,
-                    hand: [],
-                    score: 0,
-                    busted: false,
-                    bet: 0,
-                  },
-                  dealer: createPlayer(true),
-                  currentBet: 0,
-                });
-                setPlacedChips([]);
-              }}
-              disabled={gameState.player.chips < MINIMUM_BET}
-            >
-              {gameState.player.chips < MINIMUM_BET ? 'Game Over - No Chips Left!' : 'Play Again'}
-            </button>
-          </div>
-        )}
-      </div>
+      <GameTable
+        gameState={gameState}
+        showDealerCard={showDealerCard}
+        placedChips={placedChips}
+        currentBetAmount={currentBetAmount}
+        chipValues={CHIP_VALUES}
+        addToBet={addToBet}
+        clearBet={clearBet}
+        placeBet={placeBet}
+        handleSliderBetChange={handleSliderBetChange}
+        hit={hit}
+        stand={stand}
+        doubleDown={doubleDown}
+        surrender={surrender}
+        split={split}
+        playAgain={playAgain}
+        minimumBet={MINIMUM_BET}
+      />
     </div>
   );
-} 
+}

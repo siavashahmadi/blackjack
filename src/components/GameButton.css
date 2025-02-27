@@ -1,0 +1,188 @@
+.game-button {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border: none;
+    border-radius: 8px;
+    padding: 0;
+    font-family: inherit;
+    font-weight: bold;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    overflow: hidden;
+    outline: none;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  }
+  
+  .button-content {
+    position: relative;
+    z-index: 2;
+    padding: 0.8rem 1.5rem;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  .button-glow {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 40%;
+    background: linear-gradient(to bottom, rgba(255, 255, 255, 0.2), rgba(255, 255, 255, 0));
+    pointer-events: none;
+    z-index: 1;
+    border-radius: 8px 8px 0 0;
+  }
+  
+  /* Button types */
+  .button-primary {
+    background: linear-gradient(to bottom, #3498db, #2980b9);
+    color: white;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+  }
+  
+  .button-secondary {
+    background: linear-gradient(to bottom, #95a5a6, #7f8c8d);
+    color: white;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+  }
+  
+  .button-success {
+    background: linear-gradient(to bottom, #2ecc71, #27ae60);
+    color: white;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+  }
+  
+  .button-danger {
+    background: linear-gradient(to bottom, #e74c3c, #c0392b);
+    color: white;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+  }
+  
+  .button-warning {
+    background: linear-gradient(to bottom, #f1c40f, #f39c12);
+    color: white;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+  }
+  
+  /* Button sizes */
+  .button-small .button-content {
+    padding: 0.5rem 1rem;
+    font-size: 0.9rem;
+  }
+  
+  .button-medium .button-content {
+    padding: 0.8rem 1.5rem;
+    font-size: 1rem;
+  }
+  
+  .button-large .button-content {
+    padding: 1rem 2rem;
+    font-size: 1.1rem;
+  }
+  
+  /* Full width */
+  .full-width {
+    width: 100%;
+  }
+  
+  /* Hover & Active states */
+  .game-button:hover:not(.disabled) {
+    transform: translateY(-3px);
+    box-shadow: 0 6px 10px rgba(0, 0, 0, 0.15);
+  }
+  
+  .game-button:active:not(.disabled) {
+    transform: translateY(0);
+    box-shadow: 0 2px 3px rgba(0, 0, 0, 0.1);
+  }
+  
+  /* Disabled state */
+  .game-button.disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    box-shadow: none;
+  }
+  
+  /* Button press effect */
+  .game-button:active:not(.disabled) .button-content {
+    transform: scale(0.98);
+    transition: transform 0.1s;
+  }
+  
+  /* Mobile optimizations */
+  @media (max-width: 768px) {
+    .button-small .button-content {
+      padding: 0.4rem 0.8rem;
+      font-size: 0.8rem;
+    }
+    
+    .button-medium .button-content {
+      padding: 0.7rem 1.2rem;
+      font-size: 0.9rem;
+    }
+    
+    .button-large .button-content {
+      padding: 0.9rem 1.6rem;
+      font-size: 1rem;
+    }
+  }
+  
+  @media (max-width: 480px) {
+    .button-small .button-content {
+      padding: 0.3rem 0.6rem;
+      font-size: 0.75rem;
+    }
+    
+    .button-medium .button-content {
+      padding: 0.6rem 1rem;
+      font-size: 0.85rem;
+    }
+    
+    .button-large .button-content {
+      padding: 0.8rem 1.4rem;
+      font-size: 0.95rem;
+    }
+  }
+  
+  /* For touch devices */
+  @media (hover: none) {
+    .game-button:hover:not(.disabled) {
+      transform: none;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+  }
+  
+  /* High contrast mode */
+  @media (prefers-contrast: high) {
+    .game-button {
+      background: black !important;
+      border: 2px solid white !important;
+      color: white !important;
+      text-shadow: none !important;
+    }
+    
+    .button-glow {
+      display: none;
+    }
+  }
+  
+  /* Reduced motion */
+  @media (prefers-reduced-motion: reduce) {
+    .game-button {
+      transition: none;
+    }
+    
+    .game-button:hover:not(.disabled),
+    .game-button:active:not(.disabled),
+    .game-button:active:not(.disabled) .button-content {
+      transform: none;
+      transition: none;
+    }
+  }

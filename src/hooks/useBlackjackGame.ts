@@ -16,12 +16,11 @@ export function useBlackjackGame() {
   const [showMessage, setShowMessage] = useState(false);
   const [messageType, setMessageType] = useState<'info' | 'success' | 'warning' | 'error'>('info');
 
-  // Show dealer card when game is over
+  // Show dealer card when game is over or in dealer turn
   useEffect(() => {
-    if (gameState.gameStatus === 'gameOver') {
-      const dealerCardTimer = setTimeout(() => {
-        setShowDealerCard(true);
-      }, 300);
+    if (gameState.gameStatus === 'gameOver' || gameState.gameStatus === 'dealerTurn') {
+      // Reveal dealer's card immediately when dealer's turn begins
+      setShowDealerCard(true);
       
       // Show appropriate game animation based on winner
       const animationTimer = setTimeout(() => {
@@ -46,7 +45,6 @@ export function useBlackjackGame() {
       }, 800);
       
       return () => {
-        clearTimeout(dealerCardTimer);
         clearTimeout(animationTimer);
       };
     } else {

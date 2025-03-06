@@ -1,8 +1,8 @@
 .game-message {
     position: fixed;
-    top: 100px;
-    left: 50%;
-    transform: translateX(-50%);
+    left: 20px;
+    top: 50%;
+    transform: translateY(-50%);
     z-index: 1000;
     display: flex;
     align-items: center;
@@ -13,7 +13,7 @@
     box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
     backdrop-filter: blur(10px);
     border: 1px solid rgba(255, 255, 255, 0.1);
-    max-width: 90vw;
+    max-width: 300px;
     opacity: 0;
     pointer-events: none;
   }
@@ -56,22 +56,22 @@
   
   @keyframes messageEnter {
     0% {
-      transform: translate(-50%, -20px);
+      transform: translate(-20px, -50%);
       opacity: 0;
     }
     100% {
-      transform: translate(-50%, 0);
+      transform: translate(0, -50%);
       opacity: 1;
     }
   }
   
   @keyframes messageExit {
     0% {
-      transform: translate(-50%, 0);
+      transform: translate(0, -50%);
       opacity: 1;
     }
     100% {
-      transform: translate(-50%, -20px);
+      transform: translate(-20px, -50%);
       opacity: 0;
     }
   }
@@ -79,7 +79,7 @@
   /* Mobile Responsiveness */
   @media (max-width: 768px) {
     .game-message {
-      top: 80px;
+      top: 60%;
       padding: 0.8rem 1.2rem;
     }
     
@@ -95,7 +95,7 @@
   
   @media (max-width: 480px) {
     .game-message {
-      top: 60px;
+      top: 55%;
       padding: 0.7rem 1rem;
     }
     
@@ -130,7 +130,7 @@
     .message-enter, .message-exit {
       animation: none;
       opacity: 1;
-      transform: translate(-50%, 0);
+      transform: translate(0, -50%);
     }
     
     .message-exit {
@@ -140,7 +140,9 @@
 
   @media screen and (max-width: 430px) {
     .game-message {
-      transform: scale(0.8);
+      left: 10px;
+      max-width: 250px;
+      transform: scale(0.8) translateY(-50%);
     }
     
   }

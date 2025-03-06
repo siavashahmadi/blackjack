@@ -101,6 +101,12 @@ export default function GameTable({
         />
       )}
 
+      {gameState.gameStatus === 'dealerTurn' && (
+        <div className="dealer-turn-message">
+          <div className="message-content">Dealer's Turn</div>
+        </div>
+      )}
+
       {gameState.gameStatus === 'gameOver' && (
         <ResultsScreen
           message={gameState.message}

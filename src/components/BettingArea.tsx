@@ -22,7 +22,6 @@ interface BettingAreaProps {
 }
 
 export default function BettingArea({
-  placedChips,
   currentBetAmount,
   chipValues,
   playerChips,

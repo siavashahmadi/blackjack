@@ -466,7 +466,7 @@ button[onClick*="stand"]:hover {
 @media screen and (max-width: 430px) {
   .game-container {
     height: auto;
-    min-height: 86vh;
+    min-height: 80vh;
     padding: 0.5rem;
   }
   
@@ -487,7 +487,7 @@ button[onClick*="stand"]:hover {
   
   .betting-controls-container {
     width: 100%;
-    margin-top: -70px;
+    margin-top: -75px;
 
   }
   
@@ -497,10 +497,11 @@ button[onClick*="stand"]:hover {
     /* transform: scale(0.9); */
   }
   
-  /* .controls-container {
-    top: 22.5em;
-    transform: scale(0.8);
-  } */
+  .controls-container {
+    top: 19em;
+    transform: scale(0.7);
+    padding: 0px;
+  }
   
   .bet-actions {
     /* top: 22.5em; */
@@ -514,12 +515,21 @@ button[onClick*="stand"]:hover {
     flex-wrap: wrap;
   }
 
+  .player-info {
+    display: flex;
+    transform: scale(0.8)
+  }
+
+  .dealer-section {
+    top: 5%;
+  }
+
   .player-section {
-    /* bottom: 20%; */
+    bottom: 5%;
   }
   
   .chip-stack {
-    gap: 1.5rem;
+    gap: 1rem;
     margin-bottom: -1rem;
     transform: scale(0.7);
   }

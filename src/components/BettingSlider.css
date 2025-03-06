@@ -100,3 +100,10 @@
 .quick-bet-buttons button:active {
   transform: translateY(0);
 }
+
+@media screen and (max-width: 430px) {
+  .betting-slider-container{
+    margin-bottom: -15px;
+  }
+  
+}

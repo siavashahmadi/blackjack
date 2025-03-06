@@ -137,3 +137,10 @@
       display: none;
     }
   }
+
+  @media screen and (max-width: 430px) {
+    .game-message {
+      transform: scale(0.8);
+    }
+    
+  }

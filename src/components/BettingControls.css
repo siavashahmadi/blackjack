@@ -25,3 +25,13 @@
     border: 1px solid rgba(255,255,255,0.1);
     letter-spacing: 0.5px;
 }
+
+@media screen and (max-width: 430px) {
+    .player-chips-display {
+        transform: scale(0.7)
+    }
+
+    /* .current-bet {
+        transform: scale(0.7)
+    } */
+}

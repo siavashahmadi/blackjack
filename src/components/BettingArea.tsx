@@ -1,5 +1,6 @@
 import BettingControls from './BettingControls';
 import './Game.css';
+import './BettingArea.css';
 import { formatWithCommas } from '../utils/formatters';
 
 interface PlacedChip {

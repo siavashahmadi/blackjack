@@ -1,6 +1,6 @@
-import ChipDisplay from './ChipDisplay';
 import BettingControls from './BettingControls';
 import './Game.css';
+import { formatWithCommas } from '../utils/formatters';
 
 interface PlacedChip {
   value: number;
@@ -35,11 +35,11 @@ export default function BettingArea({
   return (
     <div className="betting-section">
       <div className="betting-area">
-        <ChipDisplay placedChips={placedChips} />
+        {/* Remove ChipDisplay from here since it's now in GameTable */}
         
         {currentBetAmount > 0 && (
           <div className="current-bet">
-            Current Bet: ${currentBetAmount}
+            Current Bet: ${formatWithCommas(currentBetAmount)}
           </div>
         )}
       </div>

@@ -1,5 +1,5 @@
 import { Card as CardType } from '../types/game';
-import './Card.css';
+import styles from '../styles/Card.module.css';
 
 interface CardProps {
   card: CardType;
@@ -17,56 +17,55 @@ const getSuitSymbol = (suit: string): string => {
   }
 };
 
-const getSuitColor = (suit: string): string => {
-  return ['hearts', 'diamonds'].includes(suit) ? 'red' : 'black';
-};
-
 export default function Card({ card, hidden = false, revealed = false }: CardProps) {
   const suitSymbol = getSuitSymbol(card.suit);
-  const color = getSuitColor(card.suit);
+  const suitClass = styles[card.suit] || '';
   
   const cardClasses = [
-    'playing-card',
-    hidden ? 'hidden' : '',
-    revealed ? 'reveal' : '',
-    `suit-${card.suit}`
+    styles.card,
+    hidden ? styles.hidden : '',
+    revealed ? styles.reveal : '',
   ].filter(Boolean).join(' ');
 
   return (
     <div className={cardClasses} data-value={card.rank} data-suit={card.suit}>
-      {!hidden && (
-        <>
-          <div className="card-corner top-left">
-            <div className="card-rank">{card.rank}</div>
-            <div className="card-suit" style={{ color }}>{suitSymbol}</div>
-          </div>
-          
-          <div className="card-center" style={{ color }}>
-            {card.rank === '10' || ['J', 'Q', 'K', 'A'].includes(card.rank) ? (
-              <div className="card-face">
-                {card.rank === 'A' && <div className="big-suit">{suitSymbol}</div>}
-                {card.rank === 'K' && <div className="face-icon">♚</div>}
-                {card.rank === 'Q' && <div className="face-icon">♛</div>}
-                {card.rank === 'J' && <div className="face-icon">♞</div>}
-                {card.rank === '10' && Array(10).fill(null).map((_, i) => (
-                  <div key={i} className="small-suit">{suitSymbol}</div>
-                ))}
-              </div>
-            ) : (
-              <div className="card-pips">
-                {Array(parseInt(card.rank as string) || 0).fill(null).map((_, i) => (
-                  <div key={i} className="pip">{suitSymbol}</div>
-                ))}
-              </div>
-            )}
-          </div>
-          
-          <div className="card-corner bottom-right">
-            <div className="card-rank">{card.rank}</div>
-            <div className="card-suit" style={{ color }}>{suitSymbol}</div>
-          </div>
-        </>
-      )}
+      <div className={styles.cardFront}>
+        <div className={`${styles.cardCorner} ${styles.topLeft}`}>
+          <div className={`${styles.cardRank} ${suitClass}`}>{card.rank}</div>
+          <div className={`${styles.cardSuit} ${suitClass}`}>{suitSymbol}</div>
+        </div>
+        
+        <div className={`${styles.cardCenter} ${suitClass}`}>
+          {card.rank === '10' || ['J', 'Q', 'K', 'A'].includes(card.rank) ? (
+            <div className={styles.cardFace}>
+              {card.rank === 'A' && <div className={styles.bigSuit}>{suitSymbol}</div>}
+              {card.rank === 'K' && <div className={styles.faceIcon}>♚</div>}
+              {card.rank === 'Q' && <div className={styles.faceIcon}>♛</div>}
+              {card.rank === 'J' && <div className={styles.faceIcon}>♞</div>}
+              {card.rank === '10' && (
+                <div className={styles.compactPips}>
+                  {[...Array(10)].map((_, i) => (
+                    <span key={i} className={styles.smallSuit}>{suitSymbol}</span>
+                  ))}
+                </div>
+              )}
+            </div>
+          ) : (
+            <div className={styles.cardPips}>
+              {Array(parseInt(card.rank as string) || 0).fill(null).map((_, i) => (
+                <div key={i} className={styles.pip}>{suitSymbol}</div>
+              ))}
+            </div>
+          )}
+        </div>
+        
+        <div className={`${styles.cardCorner} ${styles.bottomRight}`}>
+          <div className={`${styles.cardRank} ${suitClass}`}>{card.rank}</div>
+          <div className={`${styles.cardSuit} ${suitClass}`}>{suitSymbol}</div>
+        </div>
+      </div>
+      
+      <div className={styles.cardBack}></div>
     </div>
   );
 }

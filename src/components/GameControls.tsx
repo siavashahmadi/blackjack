@@ -1,4 +1,5 @@
 import './Game.css';
+import { formatWithCommas } from '../utils/formatters';
 
 interface GameControlsProps {
   hit: () => void;
@@ -26,20 +27,24 @@ export default function GameControls({
   return (
     <div className="controls-container">
       <div className="action-controls">
-        <button onClick={hit}>Hit</button>
-        <button onClick={stand}>Stand</button>
-        {canDoubleDown && (
-          <button onClick={doubleDown}>Double Down</button>
-        )}
-        {canSurrender && (
-          <button onClick={surrender}>Surrender</button>
-        )}
-        {canSplit && (
-          <button onClick={split}>Split</button>
-        )}
+        <div className="primary-controls">
+          <button onClick={hit}>Hit</button>
+          <button onClick={stand}>Stand</button>
+        </div>
+        <div className="secondary-controls">
+          {canDoubleDown && (
+            <button onClick={doubleDown}>Double Down</button>
+          )}
+          {canSurrender && (
+            <button onClick={surrender}>Surrender</button>
+          )}
+          {canSplit && (
+            <button onClick={split}>Split</button>
+          )}
+        </div>
       </div>
       <div className="player-info">
-        Chips: ${playerChips}
+        Balance: ${formatWithCommas(playerChips)}
       </div>
     </div>
   );

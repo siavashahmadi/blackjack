@@ -11,7 +11,6 @@ interface DealerSectionProps {
 export default function DealerSection({ dealer, gameStatus, showDealerCard }: DealerSectionProps) {
   return (
     <div className="dealer-section">
-      <h2>Dealer</h2>
       <div className="cards">
         {dealer.hand.map((card, index) => (
           <Card 

@@ -1,0 +1,90 @@
+:root {
+  /* Colors */
+  --color-felt: #1d6334;
+  --color-felt-border: #1a472e;
+  --color-felt-gradient-start: #298148;
+  --color-felt-gradient-end: #1d6334;
+  
+  /* Card colors */
+  --color-card-bg: #ffffff;
+  --color-card-border: #cccccc;
+  --color-card-shadow: rgba(0, 0, 0, 0.2);
+  --color-card-red: #e74c3c;
+  --color-card-black: #2c3e50;
+  
+  /* Chip colors */
+  --color-chip-5: #ffffff;
+  --color-chip-25: #ff5252;
+  --color-chip-100: #2ecc71;
+  --color-chip-500: #3498db;
+  
+  /* Button colors */
+  --color-button-primary: #3498db;
+  --color-button-primary-hover: #2980b9;
+  --color-button-success: #2ecc71;
+  --color-button-success-hover: #27ae60;
+  --color-button-warning: #f39c12;
+  --color-button-warning-hover: #e67e22;
+  --color-button-danger: #e74c3c;
+  --color-button-danger-hover: #c0392b;
+  
+  /* Message colors */
+  --color-message-info: #3498db;
+  --color-message-success: #2ecc71;
+  --color-message-warning: #f39c12;
+  --color-message-error: #e74c3c;
+  
+  /* Animation colors */
+  --color-confetti-1: #f39c12;
+  --color-confetti-2: #2ecc71;
+  --color-confetti-3: #3498db;
+  --color-confetti-4: #e74c3c;
+  --color-confetti-5: #9b59b6;
+  
+  /* Spacing */
+  --spacing-xs: 0.25rem;
+  --spacing-sm: 0.5rem;
+  --spacing-md: 1rem;
+  --spacing-lg: 2rem;
+  --spacing-xl: 3rem;
+  
+  /* Font sizes */
+  --font-size-xs: 0.75rem;
+  --font-size-sm: 0.875rem;
+  --font-size-md: 1rem;
+  --font-size-lg: 1.25rem;
+  --font-size-xl: 1.5rem;
+  --font-size-xxl: 2rem;
+  
+  /* Border radius */
+  --border-radius-sm: 0.25rem;
+  --border-radius-md: 0.5rem;
+  --border-radius-lg: 1rem;
+  --border-radius-xl: 2rem;
+  --border-radius-circle: 50%;
+  
+  /* Shadows */
+  --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
+  --shadow-md: 0 3px 6px rgba(0, 0, 0, 0.16), 0 3px 6px rgba(0, 0, 0, 0.23);
+  --shadow-lg: 0 10px 20px rgba(0, 0, 0, 0.19), 0 6px 6px rgba(0, 0, 0, 0.23);
+  --shadow-xl: 0 14px 28px rgba(0, 0, 0, 0.25), 0 10px 10px rgba(0, 0, 0, 0.22);
+  
+  /* Transitions */
+  --transition-fast: 0.2s ease;
+  --transition-medium: 0.3s ease;
+  --transition-slow: 0.5s ease;
+  
+  /* Z-index layers */
+  --z-index-table: 1;
+  --z-index-cards: 10;
+  --z-index-chips: 20;
+  --z-index-controls: 30;
+  --z-index-message: 40;
+  --z-index-animation: 50;
+  
+  /* Breakpoints */
+  --breakpoint-sm: 576px;
+  --breakpoint-md: 768px;
+  --breakpoint-lg: 992px;
+  --breakpoint-xl: 1200px;
+}

@@ -1,0 +1,181 @@
+@import './variables.css';
+
+.gameContainer {
+  max-width: 100%;
+  margin: 0 auto;
+  text-align: center;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+  perspective: 1200px;
+  height: 85vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.gameTable {
+  background: linear-gradient(145deg, var(--color-felt-gradient-start), var(--color-felt-gradient-end));
+  border-radius: 220px/220px;
+  padding: var(--spacing-xl);
+  box-shadow: 
+    0 10px 30px rgba(0, 0, 0, 0.15),
+    inset 0 0 50px rgba(0, 0, 0, 0.3),
+    0 0 0 15px var(--color-felt-border);
+  position: relative;
+  transform-origin: bottom center;
+  min-height: 400px;
+  width: 50em;
+  margin: 0 auto 2rem;
+  flex: 1;
+  overflow: visible;
+}
+
+.tableFelt {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  border-radius: 220px/220px;
+  background: 
+    radial-gradient(circle at center, transparent 0%, rgba(0,0,0,0.2) 100%),
+    linear-gradient(45deg, transparent 48%, rgba(255,255,255,0.1) 50%, transparent 52%),
+    linear-gradient(-45deg, transparent 48%, rgba(255,255,255,0.1) 50%, transparent 52%);
+  background-size: 100% 100%, 30px 30px, 30px 30px;
+  pointer-events: none;
+}
+
+.dealerSection {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 100%;
+  z-index: var(--z-index-cards);
+}
+
+.playerSection {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  bottom: 20%;
+  width: 100%;
+  z-index: var(--z-index-cards);
+}
+
+.bettingArea {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  bottom: 5%;
+  width: 100%;
+  z-index: var(--z-index-controls);
+}
+
+.gameControls {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  bottom: 5%;
+  width: 100%;
+  z-index: var(--z-index-controls);
+  display: flex;
+  justify-content: center;
+  gap: var(--spacing-md);
+}
+
+.resultsScreen {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  z-index: var(--z-index-message);
+  background: rgba(255, 255, 255, 0.9);
+  padding: var(--spacing-lg);
+  border-radius: var(--border-radius-lg);
+  box-shadow: var(--shadow-lg);
+  text-align: center;
+  min-width: 300px;
+}
+
+.addMoneyButton {
+  background: linear-gradient(to bottom, var(--color-button-warning), var(--color-button-warning-hover));
+  position: fixed;
+  right: 0px;
+  z-index: 1000;
+  top: 10px;
+  color: white;
+  border: none;
+  padding: var(--spacing-sm) var(--spacing-md);
+  border-radius: var(--border-radius-md);
+  cursor: pointer;
+  font-weight: bold;
+  box-shadow: var(--shadow-sm);
+  transition: var(--transition-fast);
+}
+
+.resetBalanceButton {
+  background: linear-gradient(to bottom, var(--color-button-danger), var(--color-button-danger-hover));
+  position: fixed;
+  right: 0px;
+  z-index: 1000;
+  top: 50px;
+  color: white;
+  border: none;
+  padding: var(--spacing-sm) var(--spacing-md);
+  border-radius: var(--border-radius-md);
+  cursor: pointer;
+  font-weight: bold;
+  box-shadow: var(--shadow-sm);
+  transition: var(--transition-fast);
+}
+
+.addMoneyButton:hover,
+.resetBalanceButton:hover {
+  box-shadow: var(--shadow-md);
+  transform: translateY(-2px);
+}
+
+/* Media Queries */
+@media screen and (max-width: 1200px) {
+  .gameTable {
+    width: 45em;
+  }
+}
+
+@media screen and (max-width: 992px) {
+  .gameTable {
+    width: 40em;
+    padding: var(--spacing-lg);
+  }
+}
+
+@media screen and (max-width: 768px) {
+  .gameTable {
+    width: 35em;
+    min-height: 350px;
+  }
+  
+  .gameControls {
+    flex-wrap: wrap;
+  }
+}
+
+@media screen and (max-width: 576px) {
+  .gameContainer {
+    height: 95vh;
+    padding: var(--spacing-sm);
+  }
+  
+  .gameTable {
+    width: 95%;
+    padding: var(--spacing-md);
+    min-height: 300px;
+  }
+  
+  .dealerSection,
+  .playerSection {
+    transform: translateX(-50%) scale(0.8);
+  }
+  
+  .bettingArea {
+    transform: translateX(-50%) scale(0.9);
+  }
+}

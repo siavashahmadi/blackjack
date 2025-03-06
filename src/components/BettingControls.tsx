@@ -1,5 +1,8 @@
 import BettingSlider from './BettingSlider';
+import Chip from './Chip';
 import './Game.css';
+import './BettingControls.css';
+import { formatWithCommas } from '../utils/formatters';
 
 interface BettingControlsProps {
   chipValues: number[];
@@ -26,14 +29,12 @@ export default function BettingControls({
     <div className="betting-controls-container">
       <div className="chip-stack">
         {chipValues.map((value) => (
-          <button
+          <Chip
             key={value}
-            className="chip-button"
+            value={value}
             onClick={() => addToBet(value)}
             disabled={playerChips < value || currentBetAmount + value > playerChips}
-          >
-            ${value}
-          </button>
+          />
         ))}
       </div>
       
@@ -60,7 +61,7 @@ export default function BettingControls({
       </div>
       
       <div className="player-chips-display">
-        Chips: ${playerChips}
+        Balance: ${formatWithCommas(playerChips)}
       </div>
     </div>
   );

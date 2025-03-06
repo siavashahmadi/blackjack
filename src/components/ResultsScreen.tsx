@@ -1,4 +1,5 @@
 import './Game.css';
+import { formatWithCommas } from '../utils/formatters';
 
 interface ResultsScreenProps {
   message: string;
@@ -14,7 +15,7 @@ export default function ResultsScreen({ message, playAgain, playerChips }: Resul
       </div>
       <button onClick={playAgain}>Play Again</button>
       <div className="player-info">
-        Chips: ${playerChips}
+        Chips: ${formatWithCommas(playerChips)}
       </div>
     </div>
   );

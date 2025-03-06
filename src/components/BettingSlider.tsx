@@ -26,16 +26,6 @@ export default function BettingSlider({
     setLocalValue(newValue);
     onBetChange(newValue);
   };
-  
-  // Handle quick shortcuts - 25%, 50%, 75%, MAX
-  const handleQuickBet = (percentage: number) => {
-    const amount = percentage < 100 
-      ? Math.floor(maxBet * (percentage / 100)) 
-      : maxBet;
-    
-    setLocalValue(amount);
-    onBetChange(amount);
-  };
 
   return (
     <div className="betting-slider-container">
@@ -48,19 +38,7 @@ export default function BettingSlider({
           onChange={handleSliderChange}
           className="bet-slider"
         />
-      </div>
-      
-      <div className="slider-controls">
-        <div className="slider-labels">
-          <span>${minBet}</span>
-          <span>${maxBet}</span>
-        </div>
-        
-        <div className="quick-bet-buttons">
-          <button onClick={() => handleQuickBet(25)}>25%</button>
-          <button onClick={() => handleQuickBet(50)}>50%</button>
-          <button onClick={() => handleQuickBet(75)}>75%</button>
-          <button onClick={() => handleQuickBet(100)}>MAX</button>
+        <div className="slider-controls">
         </div>
       </div>
     </div>

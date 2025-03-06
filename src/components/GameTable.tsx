@@ -55,6 +55,12 @@ export default function GameTable({
     <div className="game-table">
       <div className="table-felt" />
       
+      <h2 className="dealer-label">Dealer</h2>
+      
+      {placedChips.length > 0 && (
+        <ChipDisplay placedChips={placedChips} stacked={gameState.gameStatus !== 'betting'} />
+      )}
+      
       <DealerSection 
         dealer={gameState.dealer}
         gameStatus={gameState.gameStatus}
@@ -67,10 +73,6 @@ export default function GameTable({
         isActive={gameState.gameStatus === 'playerTurn'}
       />
       
-      {gameState.gameStatus !== 'betting' && placedChips.length > 0 && (
-        <ChipDisplay placedChips={placedChips} stacked={true} />
-      )}
-
       {gameState.gameStatus === 'betting' && (
         <BettingArea 
           placedChips={placedChips}

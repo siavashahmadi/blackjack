@@ -384,6 +384,14 @@
   }
 }
 
+/* For iPhone and similar devices */
+@media (max-width: 430px) {
+  .card {
+    transform: scale(0.7);
+    margin: 0 -25px; /* Adjust margin to account for scale reduction */
+  }
+}
+
 /* Landscape mode */
 @media (max-height: 600px) and (orientation: landscape) {
   .card {

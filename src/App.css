@@ -100,6 +100,31 @@ body {
   }
 }
 
+/* Mobile responsive adjustments */
+@media screen and (max-width: 430px) {
+  .game-title {
+    font-size: 1rem;
+    top: 15px;
+    left: 0px;
+  }
+  
+  .add-money-button, .reset-balance-button {
+    top: 0.75rem;
+    padding: 0.3rem 0.6rem;
+    font-size: 0.7rem;
+    min-width: 70px;
+    margin-right: -25px;
+  }
+  
+  .add-money-button {
+    right: 10px;
+  }
+  
+  .reset-balance-button {
+    right: 90px;
+  }
+}
+
 .card {
   padding: 2em;
 }

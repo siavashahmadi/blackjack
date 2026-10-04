@@ -1,0 +1,208 @@
+{
+    "rules": [
+      {
+        "id": "component-structure",
+        "name": "React Component Structure",
+        "description": "Guidelines for creating well-structured React components",
+        "severity": "warning",
+        "targets": ["**/*.tsx", "**/*.jsx"],
+        "checks": [
+          {
+            "name": "component-size",
+            "description": "Components should be small and focused (under 200 lines)"
+          },
+          {
+            "name": "functional-components",
+            "description": "Use functional components with hooks instead of class components"
+          },
+          {
+            "name": "props-usage",
+            "description": "Props should be destructured at the component top level"
+          },
+          {
+            "name": "component-responsibility",
+            "description": "Each component should have a single responsibility"
+          }
+        ]
+      },
+      {
+        "id": "state-management",
+        "name": "React State Management",
+        "description": "Best practices for managing state in React applications",
+        "severity": "warning",
+        "targets": ["**/*.tsx", "**/*.jsx"],
+        "checks": [
+          {
+            "name": "derived-state",
+            "description": "Don't store values in state that can be derived from existing state"
+          },
+          {
+            "name": "hooks-optimization",
+            "description": "Use useMemo and useCallback to prevent unnecessary re-renders"
+          },
+          {
+            "name": "effect-dependencies",
+            "description": "All dependencies should be properly listed in useEffect dependency arrays"
+          },
+          {
+            "name": "state-location",
+            "description": "State should be lifted to the appropriate level, not higher"
+          }
+        ]
+      },
+      {
+        "id": "typescript-usage",
+        "name": "TypeScript Best Practices",
+        "description": "Guidelines for effective TypeScript implementation",
+        "severity": "warning",
+        "targets": ["**/*.ts", "**/*.tsx"],
+        "checks": [
+          {
+            "name": "type-definitions",
+            "description": "Use explicit types instead of relying on type inference"
+          },
+          {
+            "name": "avoid-any",
+            "description": "Avoid using 'any' type; use more specific types"
+          },
+          {
+            "name": "interface-naming",
+            "description": "Follow consistent naming conventions for interfaces (e.g., IComponentProps)"
+          },
+          {
+            "name": "utility-types",
+            "description": "Use TypeScript utility types where appropriate (Partial, Pick, etc.)"
+          }
+        ]
+      },
+      {
+        "id": "css-organization",
+        "name": "CSS Structure & Responsiveness",
+        "description": "Guidelines for well-organized and responsive CSS",
+        "severity": "warning",
+        "targets": ["**/*.css", "**/*.scss"],
+        "checks": [
+          {
+            "name": "responsive-design",
+            "description": "Include appropriate media queries for all screen sizes"
+          },
+          {
+            "name": "mobile-first",
+            "description": "Follow mobile-first approach in CSS organization"
+          },
+          {
+            "name": "css-duplication",
+            "description": "Avoid duplicate CSS properties and rules"
+          },
+          {
+            "name": "css-variables",
+            "description": "Use CSS variables for colors, spacing, and other repeated values"
+          }
+        ]
+      },
+      {
+        "id": "game-logic",
+        "name": "Blackjack Game Logic",
+        "description": "Validation of blackjack game implementation",
+        "severity": "error",
+        "targets": ["**/utils/*.ts", "**/game/*.ts", "**/components/Game.tsx"],
+        "checks": [
+          {
+            "name": "card-scoring",
+            "description": "Card scoring must follow blackjack rules (especially for Aces)"
+          },
+          {
+            "name": "game-state-transitions",
+            "description": "Game state changes should be logical and complete"
+          },
+          {
+            "name": "edge-cases",
+            "description": "Handle all edge cases in game play (splits, blackjack, etc.)"
+          },
+          {
+            "name": "betting-logic",
+            "description": "Ensure correct calculation of winnings and losses"
+          }
+        ]
+      },
+      {
+        "id": "code-reuse",
+        "name": "Code Reusability",
+        "description": "Guidelines for DRY (Don't Repeat Yourself) code",
+        "severity": "warning",
+        "targets": ["**/*.ts", "**/*.tsx", "**/*.jsx", "**/*.js"],
+        "checks": [
+          {
+            "name": "extract-components",
+            "description": "Extract reusable UI patterns into separate components"
+          },
+          {
+            "name": "utility-functions",
+            "description": "Create utility functions for commonly used operations"
+          },
+          {
+            "name": "custom-hooks",
+            "description": "Use custom hooks to share stateful logic between components"
+          },
+          {
+            "name": "consistent-patterns",
+            "description": "Apply consistent patterns for similar functionality"
+          }
+        ]
+      },
+      {
+        "id": "performance",
+        "name": "Performance Optimization",
+        "description": "Guidelines for optimizing application performance",
+        "severity": "warning",
+        "targets": ["**/*.ts", "**/*.tsx", "**/*.jsx", "**/*.js"],
+        "checks": [
+          {
+            "name": "render-optimization",
+            "description": "Prevent unnecessary re-renders with proper memoization"
+          },
+          {
+            "name": "event-handling",
+            "description": "Use debounce/throttle for frequently triggered events"
+          },
+          {
+            "name": "animation-performance",
+            "description": "Optimize animations for smooth performance on mobile"
+          },
+          {
+            "name": "asset-loading",
+            "description": "Optimize loading of images and other assets"
+          }
+        ]
+      },
+      {
+        "id": "mobile-experience",
+        "name": "Mobile User Experience",
+        "description": "Guidelines specific to mobile device experience",
+        "severity": "warning",
+        "targets": ["**/*.tsx", "**/*.css"],
+        "checks": [
+          {
+            "name": "touch-targets",
+            "description": "Touch targets should be at least 44x44px on mobile"
+          },
+          {
+            "name": "landscape-support",
+            "description": "Properly handle landscape orientation on mobile"
+          },
+          {
+            "name": "ios-safari",
+            "description": "Account for iOS Safari quirks (notch, viewport, etc.)"
+          },
+          {
+            "name": "small-screens",
+            "description": "Test on iPhone SE and other small screen devices"
+          }
+        ]
+      }
+    ],
+    "customAnalysis": {
+      "enabled": true,
+      "prompt": "Please perform a comprehensive code review of this React/TypeScript Blackjack application with an emphasis on mobile responsiveness. Focus on the following aspects:\n\n1. Code Quality: Evaluate component structure, state management, and TypeScript usage\n2. Game Logic: Assess card game implementation, scoring rules, and edge cases\n3. Performance: Identify optimization opportunities, especially for mobile devices\n4. Responsive Design: Evaluate how well the UI adapts to different screen sizes\n5. Code Redundancy: Find opportunities to improve code organization and reusability\n6. Accessibility: Check for web accessibility compliance (WCAG)\n7. Mobile Experience: Evaluate touch interactions and mobile-specific considerations\n\nFor each issue found, please provide:\n- A clear explanation of the problem\n- The impact on user experience or code maintainability\n- A concrete code example showing how to fix or improve it\n\nPlease organize your analysis by category, prioritizing the most impactful improvements first. Include both quick wins and longer-term architectural suggestions."
+    }
+  }

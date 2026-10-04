@@ -152,8 +152,8 @@ h2 {
   border-radius: 200px/200px;
   position: absolute;
   /* transform: scale(0.9); */
-  /* top: -50px;
-  left: -20px; */
+  top: 0px;
+  left: 0px;
   width: 100%;
   height: 100%;
   z-index: 2; /* Above the table-felt but below other elements */
@@ -543,5 +543,16 @@ button[onClick*="stand"]:hover {
     gap: 0.3rem;
     flex-wrap: wrap;
     justify-content: center;
+  }
+  .placed-chips {
+    /* border: red solid 1px;
+    border-radius: 200px/200px;
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    width: 100%;
+    height: 100%;
+    z-index: 2; /* Above the table-felt but below other elements */
+    transform: scale(0.5);
   }
 }

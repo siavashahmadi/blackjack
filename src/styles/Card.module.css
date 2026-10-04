@@ -277,7 +277,7 @@
 }
 
 .dealAnimation {
-  animation: dealCard 0.5s ease-out forwards;
+  animation: dealCard 0.8s ease-out forwards;
 }
 
 @keyframes flipReveal {
